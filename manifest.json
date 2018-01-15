@@ -1,0 +1,13 @@
+{
+	"name": "chrosche",
+	"description": "WIP",
+	"version": "1.0",
+	"manifest_version": 2,
+	"chrome_url_overrides": {
+		"newtab": "index.html"
+	},
+	"permissions": [
+		"storage"
+	],
+	"author": "wassan128"
+}
