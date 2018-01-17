@@ -1,0 +1,76 @@
+@charset "utf-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+.modal {
+	display: one;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.7);
+	position: fixed;
+	top: 0;
+}
+	.modal-box {
+		background: rgba(255, 255, 255, 0.9);
+		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
+		width: 60%;
+		height: 60%;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		margin: auto;
+		padding: 2em;
+	}
+		a.modal-close {
+			cursor: pointer;
+		}
+	form {
+		font-size: 0;
+	}
+		input {
+			border: none;
+			padding: 1em;
+			outline: none;
+		}
+		input:focus {
+		}
+		button {
+			border: none;
+			padding: 1em;
+			background: #666;
+			color: #FFF;
+			outline: none;
+			cursor: pointer;
+		}
+		button:hover {
+			opacity: 0.5;
+		}
+
+table {
+	border-collapse: separate;
+	border-spacing: 0.5em;
+	margin: 0 auto;
+}
+	td {
+		padding: 0.7em 1em;
+		background: #EEE;
+		width: 60px;
+		height: 50px;
+		vertical-align: middle;
+		text-align: center;
+		cursor: pointer;
+		transition: 0.3s;
+	}
+	td:hover {
+		background: #FAFAFA;
+	}
