@@ -24,7 +24,7 @@ html, body {
 	top: 0;
 }
 	.modal-box {
-		background: rgba(255, 255, 255, 0.9);
+		background: rgba(245, 255, 245, 0.9);
 		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 		width: 60%;
 		height: 60%;
@@ -42,10 +42,24 @@ html, body {
 		.modal-close {
 			border: none;
 			font-weight: bold;
-			color: #FFF;
-			background: red;
 			cursor: pointer;
 		}
+		.modal-box h3 {
+			font-size: 25pt;
+			color: #AAA;
+		}
+		.modal-box ul {
+			margin: 1em 0;
+			list-style: none;
+		}
+			.modal-box li {
+				background: #FFF;
+				padding: 1em 1em;
+				border-bottom: 3px dotted #CCC;
+			}
+			.modal-box li:last-child {
+				border: none;
+			}
 	form {
 		font-size: 0;
 	}
