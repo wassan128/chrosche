@@ -15,6 +15,20 @@ html, body {
 	height: 100%;
 }
 
+header {
+	width: 100%;
+}
+	header p {
+		color: #CDC;
+		padding: 0.8em;
+		font-family: "Rounded M+ 1p heavy";
+	}
+		header p span {
+			color: #239a3b;
+			font-size: 15pt;
+			font-weight: bold;
+		}
+	
 .modal {
 	display: none;
 	width: 100%;
@@ -24,7 +38,7 @@ html, body {
 	top: 0;
 }
 	.modal-box {
-		background: rgba(245, 255, 245, 0.9);
+		background: rgba(255, 255, 255, 0.9);
 		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
 		width: 60%;
 		height: 60%;
@@ -46,7 +60,7 @@ html, body {
 		}
 		.modal-box h3 {
 			font-size: 25pt;
-			color: #AAA;
+			color: #BCB;
 		}
 		.modal-box ul {
 			margin: 1em 0;
@@ -55,7 +69,7 @@ html, body {
 			.modal-box li {
 				background: #FFF;
 				padding: 1em 1em;
-				border-bottom: 3px dotted #CCC;
+				border-bottom: 3px dotted #EEE;
 			}
 			.modal-box li:last-child {
 				border: none;
@@ -81,13 +95,23 @@ html, body {
 		button.btn-save:hover {
 			opacity: 0.5;
 		}
+	div h2 {
+		text-align: center;
+		font-size: 20pt;
+		background: #239a3b;
+		color: #FFF;
+		padding: 0.5em;
+		box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.5);
+	}
 
 table {
 	border-collapse: separate;
 	border-spacing: 0.5em;
-	margin: 0 auto;
+	margin: 2em auto;
 }
 	td {
+		font-size: 9pt;
+		color: #666;
 		padding: 0.7em 1em;
 		background: #F9F9F9;
 		border-radius: 3px;
@@ -100,4 +124,14 @@ table {
 	}
 	td:hover {
 		background: #FAFAFA;
+	}
+
+footer {
+	position: fixed;
+	bottom: 1em;
+	width: 100%;
+}
+	footer p {
+		text-align: center;
+		color: #AAA;
 	}

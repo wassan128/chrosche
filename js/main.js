@@ -66,12 +66,20 @@ const en_td = (td) => {
 			for (const l of res[year][month][date]) {
 				const li = document.createElement("li");
 				li.innerText = l;
+				en_li(li);
 				ul.appendChild(li);
 			}
 		});
 		document.querySelector(".modal").style.display = "block";
 	};
 	td.addEventListener("click", fn_td, false);
+};
+
+const en_li = (li) => {
+	const fn_li = (e) => {
+		console.log(e.target.innerText);
+	};
+	li.addEventListener("click", fn_li, false);
 };
 
 const draw_calendar = (offset) => {
