@@ -108,6 +108,7 @@ table {
 	border-collapse: separate;
 	border-spacing: 0.5em;
 	margin: 2em auto;
+	width: 90%;
 }
 	td {
 		font-size: 9pt;

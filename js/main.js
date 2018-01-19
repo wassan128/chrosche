@@ -17,6 +17,13 @@ const ld_memo = () => {
 	});
 };
 
+const gen_li = (text) => {
+	const li = document.createElement("li");
+	li.innerText = text;
+	en_li(li);
+	return li;
+};
+
 const en_btn = () => {
 	const btn_save = document.querySelector(".btn-save");
 	const fn_btn_save = (e) => {
@@ -39,6 +46,9 @@ const en_btn = () => {
 				res[year][month][date].push(text.value);
 			}
 			chrome.storage.local.set(res, () => {
+				const ul = document.querySelector("ul");
+				const li = gen_li(text.value);
+				ul.appendChild(li);
 				document.getElementById(`c${date}`).style.background = "#c6e48b";
 				text.value = "";
 			});
@@ -66,9 +76,7 @@ const en_td = (td) => {
 			}
 
 			for (const l of res[year][month][date]) {
-				const li = document.createElement("li");
-				li.innerText = l;
-				en_li(li);
+				const li = gen_li(l);
 				ul.appendChild(li);
 			}
 		});
@@ -79,6 +87,10 @@ const en_td = (td) => {
 
 const en_li = (li) => {
 	const fn_li = (e) => {
+		//TODO: 良い感じ確認ボックス
+		if (!confirm("削除しますか？")) {
+			return;
+		}
 		const [year, month] = get_ym();
 		const date = document.getElementById("cal-date").innerText;
 		const del = e.target.innerText;
@@ -86,6 +98,7 @@ const en_li = (li) => {
 			res[year][month][date] = res[year][month][date].filter((m) => m !== del);
 			chrome.storage.local.set(res, () => {
 				li.parentNode.removeChild(li);
+				//TODO: 削除後の背景色更新
 			});
 		});
 	};
