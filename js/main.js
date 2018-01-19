@@ -10,7 +10,9 @@ const ld_memo = () => {
 	const [year, month] = get_ym();
 	chrome.storage.local.get(year, (res) => {
 		for (const date in res[year][month]) {
-			document.getElementById(`c${date}`).style.background = "#c6e48b";
+			if (res[year][month][date].length > 0) {
+				document.getElementById(`c${date}`).style.background = "#c6e48b";
+			}
 		}
 	});
 };
@@ -77,7 +79,15 @@ const en_td = (td) => {
 
 const en_li = (li) => {
 	const fn_li = (e) => {
-		console.log(e.target.innerText);
+		const [year, month] = get_ym();
+		const date = document.getElementById("cal-date").innerText;
+		const del = e.target.innerText;
+		chrome.storage.local.get(year, (res) => {
+			res[year][month][date] = res[year][month][date].filter((m) => m !== del);
+			chrome.storage.local.set(res, () => {
+				li.parentNode.removeChild(li);
+			});
+		});
 	};
 	li.addEventListener("click", fn_li, false);
 };
