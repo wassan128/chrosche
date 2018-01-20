@@ -7,11 +7,19 @@ const get_ym = () => {
 };
 
 const ld_memo = () => {
+	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
 	const [year, month] = get_ym();
 	chrome.storage.local.get(year, (res) => {
 		for (const date in res[year][month]) {
-			if (res[year][month][date].length > 0) {
-				document.getElementById(`c${date}`).style.background = "#c6e48b";
+			const len = res[year][month][date].length;
+			const lv = (len > 4) ? 4 : len;
+			if (lv >= 0) {
+				document.getElementById(`c${date}`).style.background = color[lv];
+				if (lv > 2) {
+					document.getElementById(`c${date}`).style.color = "#fff";
+				} else {
+					document.getElementById(`c${date}`).style.color = "#666";
+				}
 			}
 		}
 	});
@@ -49,7 +57,7 @@ const en_btn = () => {
 				const ul = document.querySelector("ul");
 				const li = gen_li(text.value);
 				ul.appendChild(li);
-				document.getElementById(`c${date}`).style.background = "#c6e48b";
+				ld_memo();
 				text.value = "";
 			});
 		});
@@ -95,10 +103,10 @@ const en_li = (li) => {
 		const date = document.getElementById("cal-date").innerText;
 		const del = e.target.innerText;
 		chrome.storage.local.get(year, (res) => {
-			res[year][month][date] = res[year][month][date].filter((m) => m !== del);
+			res[year][month][date] = res[year][month][date].filter((m, i, self) => self.indexOf(del) !== i);
 			chrome.storage.local.set(res, () => {
 				li.parentNode.removeChild(li);
-				//TODO: 削除後の背景色更新
+				ld_memo();
 			});
 		});
 	};
@@ -118,7 +126,7 @@ const draw_calendar = (offset) => {
 		if (c++ < st_day) continue;
 		td.innerText = date;
 		td.setAttribute("id", `c${date}`);
-		td.style.background = "#EEE";
+		td.style.background = "#eee";
 		en_td(td);
 	}
 };
