@@ -95,8 +95,7 @@ const en_td = (td) => {
 
 const en_li = (li) => {
 	const fn_li = (e) => {
-		//TODO: 良い感じ確認ボックス
-		if (!confirm("削除しますか？")) {
+		if (!confirm(`「${e.target.innerText}」を削除しますか?`)) {
 			return;
 		}
 		const [year, month] = get_ym();

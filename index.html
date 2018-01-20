@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8"/>
 	<title>Home - chrosche</title>
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 	<link rel="stylesheet" href="css/style.css"/>
 	<script src="lib/moment.min.js"></script>
 	<script src="js/main.js"></script>
@@ -10,7 +11,7 @@
 <body>
 	<header>
 		<p>
-			<span>chrosche</span>
+			<span><i class="fa fa-folder"></i>chrosche</span>
 			 - chrome newtab scheduler
 		</p>
 	</header>
@@ -18,25 +19,30 @@
 		<div class="modal">
 			<div class="clearfix modal-box">
 				<p class="modal-control">
-					<a class="modal-close">x</a>
+					<a class="modal-close"><i class="fa fa-close"></i></a>
 				</p>
 				<div>
 					<h3>
 						<span id="cal-date">NaN</span>日
 					</h3>
-					<ul></ul>
 				</div>
 				<form>
-					<input class="memo-text" type="text" placeholder="write something"/>
-					<button type="button" class="btn-save">save</button>
+					<input class="memo-text" type="text" placeholder="予定を追加する"/>
+					<input type="text" style="display: none"/>
+					<button type="button" class="btn-save"><i class="fa fa-check"></i></button>
 				</form>
+				<div>
+					<ul></ul>
+				</div>
 			</div>
 		</div>
 		<div>
 			<h2>
+				<i class="fa fa-angle-left"></i>
 				<span id="cal-year">2018</span>
 				<span>/</span>
 				<span id="cal-month">1</span>
+				<i class="fa fa-angle-right"></i>
 			</h2>
 		</div>
 		<table>

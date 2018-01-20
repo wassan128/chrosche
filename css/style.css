@@ -10,6 +10,10 @@
 	clear: both;
 }
 
+i.fa {
+	margin-right: 0.2em;
+}
+
 html, body {
 	width: 100%;
 	height: 100%;
@@ -51,6 +55,7 @@ header {
 		left: 0;
 		margin: auto;
 		padding: 2em;
+		overflow: auto;
 	}
 		p.modal-control { 
 			float: right;
@@ -60,9 +65,18 @@ header {
 			font-weight: bold;
 			cursor: pointer;
 		}
+		.modal-close i {
+			color: #333;
+			transition: 0.5s;
+		}
+		.modal-close i:hover {
+			color: #666;
+		}
 		.modal-box h3 {
 			font-size: 25pt;
 			color: #BCB;
+			border-bottom: 1px solid #DDD;
+			margin-bottom: 0.5em;
 		}
 		.modal-box ul {
 			margin: 1em 0;
@@ -73,7 +87,7 @@ header {
 				padding: 1em 1em;
 				border-bottom: 3px dotted #eee;
 				cursor: pointer;
-				transition: 0.2s;
+				transition: 0.5s;
 			}
 			.modal-box li:hover {
 				background: #ddd;
@@ -84,22 +98,28 @@ header {
 	form {
 		font-size: 0;
 	}
+		form * {
+			font-size: 8pt;
+		}
 		input {
+			width: 60%;
 			border: none;
 			padding: 1em;
 			outline: none;
 		}
 		input:focus {
+			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
 		button.btn-save {
 			border: none;
 			padding: 1em;
-			background: #666;
+			background: #239a3b;
 			color: #FFF;
 			outline: none;
 			cursor: pointer;
+			transition: 0.3s;
 		}
-		button.btn-save:hover {
+		button.btn-save:hover, button.btn-save:focus {
 			opacity: 0.5;
 		}
 	div h2 {
@@ -110,6 +130,9 @@ header {
 		padding: 0.5em;
 		box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 	}
+		div h2 i {
+			color: #AAA;
+		}
 
 table {
 	border-collapse: separate;
