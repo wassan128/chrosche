@@ -37,14 +37,14 @@ const onclk_li = (li) => {
 			res[year][month][date] = res[year][month][date].filter((m, i, self) => self.indexOf(del) !== i);
 			chrome.storage.local.set(res, () => {
 				li.parentNode.removeChild(li);
-				ld_memo();
+				coloring();
 			});
 		});
 	};
 	li.addEventListener("click", fn_li, false);
 };
 
-const ld_memo = () => {
+const coloring = () => {
 	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
 	const [year, month] = get_ym();
 	chrome.storage.local.get(year, (res) => {
@@ -121,13 +121,13 @@ class Calendar {
 document.addEventListener("DOMContentLoaded", () => {
 	const cal = new Calendar();
 	cal.draw();
-	ld_memo();
+	coloring();
 
 	const btn_prev = document.querySelector(".btn-prev-month");
 	const fn_btn_prev = (e) => {
 		cal.prev_month();
 		cal.draw();
-		ld_memo();
+		coloring();
 	};
 	btn_prev.addEventListener("click", fn_btn_prev, false);
 	
@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const fn_btn_next = (e) => {
 		cal.next_month();
 		cal.draw();
-		ld_memo();
+		coloring();
 	};
 	btn_next.addEventListener("click", fn_btn_next, false);
 
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				const ul = document.querySelector("ul");
 				const li = generate_li(text.value);
 				ul.appendChild(li);
-				ld_memo();
+				coloring();
 				text.value = "";
 			});
 		});

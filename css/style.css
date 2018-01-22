@@ -144,13 +144,13 @@ header {
 table {
 	border-collapse: separate;
 	border-spacing: 0.5em;
-	margin: 2em auto;
+	margin: 1.5em auto;
 	width: 90%;
 }
 	td {
-		font-size: 9pt;
+		font-size: 10pt;
 		color: #666;
-		padding: 0.7em 1em;
+		padding: 0.7em;
 		background: #F9F9F9;
 		border-radius: 3px;
 		width: 50px;
@@ -159,9 +159,10 @@ table {
 		text-align: center;
 		cursor: pointer;
 		transition: 0.3s;
+		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1) inset;
 	}
 	td:hover {
-		background: #FAFAFA;
+		font-size: 5pt;
 	}
 
 footer {
