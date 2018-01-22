@@ -129,16 +129,18 @@ header {
 		font-size: 20pt;
 		color: #666;
 		background: #f9f9f9;
-		padding: 0.5em;
 		box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 	}
 		div h2 i {
-			color: #AAA;
+			color: #CCC;
 			cursor: pointer;
 			transition: 0.5s;
+			padding: 0.5em 1em;
 		}
 		div h2 i:hover {
-			color: #333;
+			font-weight: bold;
+			text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+			color: rgb(25, 97, 39);
 		}
 
 table {
@@ -162,7 +164,7 @@ table {
 		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1) inset;
 	}
 	td:hover {
-		font-size: 5pt;
+		box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.2) inset;
 	}
 
 footer {
