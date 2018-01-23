@@ -6,9 +6,8 @@ const get_ym = () => {
 	return [year, month];
 };
 
-const onclk_td = (e) => {
+const load_memo = (date) => {
 	const [year, month] = get_ym();
-	const date = e.target.innerText;
 	document.getElementById("cal-date").innerText = date;
 	chrome.storage.local.get(year, (res) => {
 		const ul = document.querySelector("ul");
@@ -22,6 +21,30 @@ const onclk_td = (e) => {
 			ul.appendChild(li);
 		}
 	});
+};
+
+const coloring = () => {
+	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
+	const [year, month] = get_ym();
+	chrome.storage.local.get(year, (res) => {
+		for (const date in res[year][month]) {
+			const len = res[year][month][date].length;
+			const lv = (len > 4) ? 4 : len;
+			if (lv >= 0) {
+				document.getElementById(`c${date}`).style.background = color[lv];
+				if (lv > 2) {
+					document.getElementById(`c${date}`).style.color = "#fff";
+				} else {
+					document.getElementById(`c${date}`).style.color = "#666";
+				}
+			}
+		}
+	});
+};
+
+const onclk_td = (e) => {
+	const date = e.target.innerText;
+	load_memo(date);
 	document.querySelector(".modal").style.display = "block";
 }
 
@@ -42,25 +65,6 @@ const onclk_li = (li) => {
 		});
 	};
 	li.addEventListener("click", fn_li, false);
-};
-
-const coloring = () => {
-	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
-	const [year, month] = get_ym();
-	chrome.storage.local.get(year, (res) => {
-		for (const date in res[year][month]) {
-			const len = res[year][month][date].length;
-			const lv = (len > 4) ? 4 : len;
-			if (lv >= 0) {
-				document.getElementById(`c${date}`).style.background = color[lv];
-				if (lv > 2) {
-					document.getElementById(`c${date}`).style.color = "#fff";
-				} else {
-					document.getElementById(`c${date}`).style.color = "#666";
-				}
-			}
-		}
-	});
 };
 
 const generate_li = (text) => {
@@ -123,21 +127,39 @@ document.addEventListener("DOMContentLoaded", () => {
 	cal.draw();
 	coloring();
 
-	const btn_prev = document.querySelector(".btn-prev-month");
-	const fn_btn_prev = (e) => {
+	const btn_prev_m = document.querySelector(".btn-prev-month");
+	const fn_btn_prev_m = (e) => {
 		cal.prev_month();
 		cal.draw();
 		coloring();
 	};
-	btn_prev.addEventListener("click", fn_btn_prev, false);
+	btn_prev_m.addEventListener("click", fn_btn_prev_m, false);
 	
-	const btn_next = document.querySelector(".btn-next-month");
-	const fn_btn_next = (e) => {
+	const btn_next_m = document.querySelector(".btn-next-month");
+	const fn_btn_next_m = (e) => {
 		cal.next_month();
 		cal.draw();
 		coloring();
 	};
-	btn_next.addEventListener("click", fn_btn_next, false);
+	btn_next_m.addEventListener("click", fn_btn_next_m, false);
+
+	const btn_prev_d = document.querySelector(".btn-prev-date");
+	const fn_btn_prev_d = (e) => {
+		const date = parseInt(document.getElementById("cal-date").innerText);
+		if (document.getElementById(`c${date - 1}`) !== null) {
+			load_memo(date - 1);
+		}
+	};
+	btn_prev_d.addEventListener("click", fn_btn_prev_d, false);
+
+	const btn_next_d = document.querySelector(".btn-next-date");
+	const fn_btn_next_d = (e) => {
+		const date = parseInt(document.getElementById("cal-date").innerText);
+		if (document.getElementById(`c${date + 1}`) !== null) {
+			load_memo(date + 1);
+		}
+	};
+	btn_next_d.addEventListener("click", fn_btn_next_d, false);
 
 	const btn_close = document.querySelector(".modal-close");
 	const fn_btn_close = (e) => {
