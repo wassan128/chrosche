@@ -27,6 +27,9 @@ const coloring = () => {
 	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
 	const [year, month] = get_ym();
 	chrome.storage.local.get(year, (res) => {
+		if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined") {
+			return;
+		}
 		for (const date in res[year][month]) {
 			const len = res[year][month][date].length;
 			const lv = (len > 4) ? 4 : len;
