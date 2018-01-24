@@ -10,7 +10,7 @@ const get_ym = () => {
 const load_memo = (date) => {
 	const [year, month] = get_ym();
 	document.getElementById("cal-date").innerText = date;
-	chrome.storage.local.get(year, (res) => {
+	chrome.storage.sync.get(year, (res) => {
 		const ul = document.querySelector("ul");
 		ul.innerHTML = "";
 		if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined" || typeof(res[year][month][date]) === "undefined") {
@@ -27,7 +27,7 @@ const load_memo = (date) => {
 const coloring = () => {
 	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
 	const [year, month] = get_ym();
-	chrome.storage.local.get(year, (res) => {
+	chrome.storage.sync.get(year, (res) => {
 		if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined") {
 			return;
 		}
@@ -57,7 +57,7 @@ const onclk_done = (done) => {
 		const li = e.target.parentNode.parentNode;
 		const [year, month] = get_ym();
 		const date = document.getElementById("cal-date").innerText;
-		chrome.storage.local.get(year, (res) => {
+		chrome.storage.sync.get(year, (res) => {
 			let is_done = false;
 			res[year][month][date].forEach((e, idx) => {
 				if (e === li.innerText) {
@@ -67,7 +67,7 @@ const onclk_done = (done) => {
 					res[year][month][date][idx] = e.replace(marker_done, "");
 				}
 			});
-			chrome.storage.local.set(res, () => {
+			chrome.storage.sync.set(res, () => {
 				if (is_done) {
 					li.setAttribute("class", "done-task");
 				} else {
@@ -88,9 +88,9 @@ const onclk_del = (del) => {
 		const [year, month] = get_ym();
 		const date = document.getElementById("cal-date").innerText;
 		const target = li.classList.contains("done-task") ? `${marker_done}${li.innerText}` : li.innerText;
-		chrome.storage.local.get(year, (res) => {
+		chrome.storage.sync.get(year, (res) => {
 			res[year][month][date] = res[year][month][date].filter((m, i, self) => self.indexOf(target) !== i);
-			chrome.storage.local.set(res, () => {
+			chrome.storage.sync.set(res, () => {
 				li.parentNode.removeChild(li);
 				coloring();
 			});
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 		const [year, month] = get_ym();
 		const date = document.getElementById("cal-date").innerText;
-		chrome.storage.local.get(year, (res) => {
+		chrome.storage.sync.get(year, (res) => {
 			if (typeof(res[year]) === "undefined") {
 				res[year] = {};
 			}
@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			} else {
 				res[year][month][date].push(text.value);
 			}
-			chrome.storage.local.set(res, () => {
+			chrome.storage.sync.set(res, () => {
 				const ul = document.querySelector("ul");
 				const li = generate_li(text.value);
 				ul.appendChild(li);
