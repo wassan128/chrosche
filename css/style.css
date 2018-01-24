@@ -94,11 +94,12 @@ header {
 			list-style: none;
 			overflow: auto;
 			max-height: 20em;
+			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
 			.modal-box li {
 				background: #fff;
 				padding: 1em;
-				border-bottom: 3px dotted #eee;
+				border-bottom: 1px dashed #eee;
 				cursor: pointer;
 				transition: 0.3s;
 			}
