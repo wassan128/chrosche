@@ -13,7 +13,7 @@ const load_memo = (date) => {
 	chrome.storage.local.get(year, (res) => {
 		const ul = document.querySelector("ul");
 		ul.innerHTML = "";
-		if (typeof(res[year][month]) === "undefined" || typeof(res[year][month][date]) === "undefined") {
+		if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined" || typeof(res[year][month][date]) === "undefined") {
 			return;
 		}
 

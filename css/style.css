@@ -141,7 +141,7 @@ header {
 					}
 					.modal-box li span i:hover {
 						box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
-						border-radius: 0px;
+						border-radius: 3px;
 					}
 	form {
 		font-size: 0;
