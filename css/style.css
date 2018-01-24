@@ -75,13 +75,13 @@ header {
 		}
 		.modal-box h3 {
 			font-size: 25pt;
-			color: #BCB;
+			color: #BBB;
 			border-bottom: 1px solid #DDD;
 			margin-bottom: 0.5em;
 			user-select: none;
 		}
 			.modal-box h3 i {
-				color: #CCC;
+				color: #DDD;
 				cursor: pointer;
 				padding: 0.5em;
 				transition: 0.3s;
@@ -97,17 +97,52 @@ header {
 		}
 			.modal-box li {
 				background: #fff;
-				padding: 1em 1em;
+				padding: 1em;
 				border-bottom: 3px dotted #eee;
 				cursor: pointer;
-				transition: 0.5s;
+				transition: 0.3s;
 			}
-			.modal-box li:hover {
-				background: #ddd;
+			.modal-box li.done-task {
+				background: #c6e48b;
 			}
 			.modal-box li:last-child {
 				border: none;
 			}
+				.modal-box li span {
+					opacity: 0;
+					line-height: 1em;
+					transition: 0.3s;
+					margin-left: 1em;
+				}
+				.modal-box li:hover span {
+					opacity: 1;
+				}
+					.modal-box li span i {
+						width: 2em;
+						height: 2em;
+						margin: 0 0.3em;
+						text-align: center;
+						line-height: 2em;
+						border-radius: 50%;
+					}
+					.modal-box li span i.fa-check {
+						background: #30ce30;
+						color: #fff;
+						transition: 0.3s;
+					}
+					.modal-box li.done-task span i.fa-check {
+						color: #30ce30;
+						background: #fff;
+					}
+					.modal-box li span i.fa-trash-o {
+						background: #cf3d3d;
+						color: #fff;
+						transition: 0.3s;
+					}
+					.modal-box li span i:hover {
+						box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+						border-radius: 0px;
+					}
 	form {
 		font-size: 0;
 	}

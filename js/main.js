@@ -1,5 +1,6 @@
 "use strict";
 
+const marker_done = "DONE:";
 const get_ym = () => {
 	const year = document.getElementById("cal-year").innerText;
 	const month = document.getElementById("cal-month").innerText;
@@ -49,31 +50,75 @@ const onclk_td = (e) => {
 	const date = e.target.innerText;
 	load_memo(date);
 	document.querySelector(".modal").style.display = "block";
-}
+};
 
-const onclk_li = (li) => {
-	const fn_li = (e) => {
-		if (!confirm(`「${e.target.innerText}」を削除しますか?`)) {
+const onclk_done = (done) => {
+	const fn_done = (e) => {
+		const li = e.target.parentNode.parentNode;
+		const [year, month] = get_ym();
+		const date = document.getElementById("cal-date").innerText;
+		chrome.storage.local.get(year, (res) => {
+			let is_done = false;
+			res[year][month][date].forEach((e, idx) => {
+				if (e === li.innerText) {
+					res[year][month][date][idx] = `${marker_done}${e}`;
+					is_done = true;
+				} else if (e === `${marker_done}${li.innerText}`) {
+					res[year][month][date][idx] = e.replace(marker_done, "");
+				}
+			});
+			chrome.storage.local.set(res, () => {
+				if (is_done) {
+					li.setAttribute("class", "done-task");
+				} else {
+					li.removeAttribute("class", "done-task");
+				}
+			});
+		});
+	};
+	done.addEventListener("click", fn_done, false);
+};
+
+const onclk_del = (del) => {
+	const fn_del = (e) => {
+		const li = e.target.parentNode.parentNode;
+		if (!confirm(`「${li.innerText}」を削除しますか?`)) {
 			return;
 		}
 		const [year, month] = get_ym();
 		const date = document.getElementById("cal-date").innerText;
-		const del = e.target.innerText;
+		const target = li.classList.contains("done-task") ? `${marker_done}${li.innerText}` : li.innerText;
 		chrome.storage.local.get(year, (res) => {
-			res[year][month][date] = res[year][month][date].filter((m, i, self) => self.indexOf(del) !== i);
+			res[year][month][date] = res[year][month][date].filter((m, i, self) => self.indexOf(target) !== i);
 			chrome.storage.local.set(res, () => {
 				li.parentNode.removeChild(li);
 				coloring();
 			});
 		});
 	};
-	li.addEventListener("click", fn_li, false);
+	del.addEventListener("click", fn_del, false);
 };
 
 const generate_li = (text) => {
 	const li = document.createElement("li");
+	if (text.slice(0, 5) === marker_done) {
+		li.setAttribute("class", "done-task");
+		text = text.replace(marker_done, "");
+	}
 	li.innerText = text;
-	onclk_li(li);
+	
+	const act = document.createElement("span");
+	const a_done = document.createElement("i");
+	a_done.setAttribute("class", "fa fa-check");
+	const a_del = document.createElement("i");
+	a_del.setAttribute("class", "fa fa-trash-o");
+	
+	onclk_done(a_done);
+	onclk_del(a_del);
+	
+	act.append(a_done);
+	act.append(a_del);
+	li.appendChild(act);
 	return li;
 };
 
