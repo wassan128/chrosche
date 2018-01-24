@@ -94,7 +94,6 @@ header {
 			list-style: none;
 			overflow: auto;
 			max-height: 20em;
-			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
 			.modal-box li {
 				background: #fff;
