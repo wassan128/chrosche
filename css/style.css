@@ -139,23 +139,36 @@ header {
 						color: #fff;
 						transition: 0.3s;
 					}
+					.modal-box li span i.fa-pencil {
+						background: #22afd2;
+						color: #fff;
+						transition: 0.3s;
+					}
 					.modal-box li span i:hover {
 						box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 						border-radius: 3px;
 					}
+				.modal-box li input.edit-box {
+					width: 95%;
+					padding: 0.5em;
+					border: none;
+					background: #eee;
+					box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+					outline: none;
+				}
 	form {
 		font-size: 0;
 	}
 		form * {
 			font-size: 8pt;
 		}
-		input {
+		form input {
 			width: 60%;
 			border: none;
 			padding: 1em;
 			outline: none;
 		}
-		input:focus {
+		form input:focus {
 			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
 		button.btn-save {

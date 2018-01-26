@@ -79,6 +79,40 @@ const onclk_done = (done) => {
 	done.addEventListener("click", fn_done, false);
 };
 
+const onclk_edit = (edit) => {
+	const fn_edit = (e) => {
+		const li = e.target.parentNode.parentNode;
+		const [year, month] = get_ym();
+		const date = document.getElementById("cal-date").innerText;
+
+		const input = document.createElement("input");
+		const span = li.children[0];
+		const before = li.innerText;
+		input.value = before;
+		input.setAttribute("class", "edit-box");
+		li.innerText = "";
+		li.appendChild(input);
+		input.addEventListener("keyup", (e) => {
+			if (e.keyCode === 13) {
+				const after = input.value;
+				chrome.storage.local.get(year, (res) => {
+					res[year][month][date].forEach((e, idx) => {
+						const txt = e.replace("DONE:", "");
+						if (txt === before) {
+							res[year][month][date][idx] = after;
+						}
+					});
+					chrome.storage.local.set(res, () => {
+						li.innerText = after;
+						li.appendChild(span);
+					});
+				});
+			}
+		});
+	};
+	edit.addEventListener("click", fn_edit, false);
+};
+
 const onclk_del = (del) => {
 	const fn_del = (e) => {
 		const li = e.target.parentNode.parentNode;
@@ -110,13 +144,17 @@ const generate_li = (text) => {
 	const act = document.createElement("span");
 	const a_done = document.createElement("i");
 	a_done.setAttribute("class", "fa fa-check");
+	const a_edit = document.createElement("i");
+	a_edit.setAttribute("class", "fa fa-pencil");
 	const a_del = document.createElement("i");
 	a_del.setAttribute("class", "fa fa-trash-o");
 	
 	onclk_done(a_done);
+	onclk_edit(a_edit);
 	onclk_del(a_del);
 	
 	act.append(a_done);
+	act.append(a_edit);
 	act.append(a_del);
 	li.appendChild(act);
 	return li;
