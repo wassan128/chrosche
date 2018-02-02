@@ -105,6 +105,7 @@ const onclk_edit = (edit) => {
 					chrome.storage.local.set(res, () => {
 						li.innerText = after;
 						li.appendChild(span);
+						li.removeAttribute("class", "done-task");
 					});
 				});
 			}
