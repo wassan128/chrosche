@@ -19,21 +19,6 @@ html, body {
 	height: 100%;
 }
 
-header {
-	width: 100%;
-}
-	header p {
-		color: #AAA;
-		padding: 0.8em;
-		font-family: "Rounded M+ 1p heavy";
-		user-select: none;
-	}
-		header p span {
-			color: #239a3b;
-			font-size: 15pt;
-			font-weight: bold;
-		}
-	
 .modal {
 	display: none;
 	width: 100%;
@@ -228,6 +213,7 @@ table {
 	}
 
 footer {
+	background: #fff;
 	position: fixed;
 	box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 	bottom: 0;
@@ -237,4 +223,10 @@ footer {
 		text-align: center;
 		padding: 1em;
 		color: #AAA;
+	}
+	footer img {
+		position: fixed;
+		bottom: 1.2em;
+		left: 1em;
+		width: 200px;
 	}
