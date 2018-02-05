@@ -26,11 +26,11 @@ const load_memo = (date) => {
 
 const coloring = () => {
 	const color = [
-		"rgba(238, 238, 238, 0.9)",
-		"rgba(198, 228, 139, 0.9)",
-		"rgba(123, 201, 111, 0.9)",
-		"rgba(35, 154, 59, 0.9)",
-		"rgba(25, 97, 39, 0.9)"
+		"rgba(238, 238, 238, 1.0)",
+		"rgba(198, 228, 139, 1.0)",
+		"rgba(123, 201, 111, 1.0)",
+		"rgba(35, 154, 59, 1.0)",
+		"rgba(25, 97, 39, 1.0)"
 	];
 	const [year, month] = get_ym();
 	chrome.storage.local.get(year, (res) => {
@@ -192,7 +192,7 @@ class Calendar {
 			const date = c - st_day + 1;
 			if (c++ < st_day || date > ed_date) {
 				td.style.color = "#333";
-				td.style.background = "rgba(249, 249, 249, 0.3)";
+				td.style.background = "rgba(249, 249, 249, 0.2)";
 				td.removeAttribute("id");
 				td.innerText = "";
 				td.removeEventListener("click", onclk_td, false);
@@ -201,7 +201,7 @@ class Calendar {
 			td.innerText = date;
 			td.setAttribute("id", `c${date}`);
 			td.style.color = "#333";
-			td.style.background = "rgba(238, 238, 238, 0.9)";
+			td.style.background = "rgba(238, 238, 238, 1.0)";
 			td.addEventListener("click", onclk_td, false);
 		}
 	}
