@@ -25,7 +25,13 @@ const load_memo = (date) => {
 };
 
 const coloring = () => {
-	const color = ["#eee", "#c6e48b", "#7bc96f", "#239a3b", "#196127"];
+	const color = [
+		"rgba(238, 238, 238, 0.9)",
+		"rgba(198, 228, 139, 0.9)",
+		"rgba(123, 201, 111, 0.9)",
+		"rgba(35, 154, 59, 0.9)",
+		"rgba(25, 97, 39, 0.9)"
+	];
 	const [year, month] = get_ym();
 	chrome.storage.local.get(year, (res) => {
 		if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined") {
@@ -39,7 +45,7 @@ const coloring = () => {
 				if (lv > 2) {
 					document.getElementById(`c${date}`).style.color = "#fff";
 				} else {
-					document.getElementById(`c${date}`).style.color = "#666";
+					document.getElementById(`c${date}`).style.color = "#333";
 				}
 			}
 		}
@@ -185,8 +191,8 @@ class Calendar {
 		for (const td of tds) {
 			const date = c - st_day + 1;
 			if (c++ < st_day || date > ed_date) {
-				td.style.color = "#666";
-				td.style.background = "#F9F9F9";
+				td.style.color = "#333";
+				td.style.background = "rgba(249, 249, 249, 0.3)";
 				td.removeAttribute("id");
 				td.innerText = "";
 				td.removeEventListener("click", onclk_td, false);
@@ -194,8 +200,8 @@ class Calendar {
 			}
 			td.innerText = date;
 			td.setAttribute("id", `c${date}`);
-			td.style.color = "#666";
-			td.style.background = "#eee";
+			td.style.color = "#333";
+			td.style.background = "rgba(238, 238, 238, 0.9)";
 			td.addEventListener("click", onclk_td, false);
 		}
 	}
