@@ -64,11 +64,9 @@ main {
 	top: 0;
 	z-index: 999;
 }
-	.modal-box {
+	.modal > div {
 		background: rgba(255, 255, 255, 0.9);
 		box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.3);
-		width: 60%;
-		height: 60%;
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -77,6 +75,11 @@ main {
 		margin: auto;
 		padding: 2em;
 		overflow: auto;
+		display: none;
+	}
+	.modal-box {
+		width: 60%;
+		height: 60%;
 	}
 		p.modal-control { 
 			float: right;
@@ -244,27 +247,6 @@ main {
 			header h2 p:hover {
 				background: #fff;
 				color: #333;
-			}
-			header h2 p.tool-search {
-				float: left;
-			}
-			header h2 p.tool-setting {
-				float: right;
-			}
-		#search-box {
-			width: 100%;
-			background: rgba(5, 77, 19, 0.7);
-			padding: 0.8em;
-			text-align: center;
-			display: none;
-			transition: 5s;
-		}
-			#search-box input {
-				padding: 0.7em;
-				font-size: 8pt;
-				width: 50%;
-				outline: none;
-				border: none;
 			}
 	table {
 		border-collapse: separate;

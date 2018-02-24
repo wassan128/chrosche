@@ -56,6 +56,7 @@ const onclk_td = (e) => {
 	const date = e.target.innerText;
 	load_memo(date);
 	document.querySelector(".modal").style.display = "block";
+	document.querySelector(".modal-box").style.display = "block";
 };
 
 const onclk_done = (done) => {
@@ -254,11 +255,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	};
 	btn_next_d.addEventListener("click", fn_btn_next_d, false);
 
-	const btn_close = document.querySelector(".modal-close");
+	const btns_close = document.querySelectorAll(".modal-close");
 	const fn_btn_close = (e) => {
 		document.querySelector(".modal").style.display = "none";
 	};
-	btn_close.addEventListener("click", fn_btn_close, false);
+	for (const btn_close of btns_close) {
+		btn_close.addEventListener("click", fn_btn_close, false);
+	}
 
 	const btn_save = document.querySelector(".btn-save");
 	const fn_btn_save = (e) => {
@@ -290,16 +293,5 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	};
 	btn_save.addEventListener("click", fn_btn_save, false);
-
-	const btn_search = document.querySelector(".tool-search");
-	const fn_btn_search = (e) => {
-		const box = document.getElementById("search-box");
-		if (box.style.display === "block") {
-			box.style.display = "none";
-		} else {
-			box.style.display = "block";
-		}
-	};
-	btn_search.addEventListener("click", fn_btn_search, false);
 });
 
