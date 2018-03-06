@@ -104,7 +104,7 @@ const onclk_edit = (edit) => {
 				const after = input.value;
 				chrome.storage.local.get(year, (res) => {
 					res[year][month][date].forEach((e, idx) => {
-						const txt = e.replace("DONE:", "");
+						const txt = e.replace(marker_done, "");
 						if (txt === before) {
 							res[year][month][date][idx] = after;
 						}
