@@ -169,7 +169,7 @@ const generate_li = (text) => {
 };
 
 class Calendar {
-    constructor(offset) {
+    constructor(offset=0) {
         this.offset = offset;
         this.cal = moment();
         this.year = this.cal.year();
@@ -223,7 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_prev_m = document.querySelector(".btn-prev-month");
     const fn_btn_prev_m = (e) => {
-        if (e) return;
         cal.prev_month();
         cal.draw();
         coloring();
@@ -232,7 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	
     const btn_next_m = document.querySelector(".btn-next-month");
     const fn_btn_next_m = (e) => {
-        if (e) return;
         cal.next_month();
         cal.draw();
         coloring();
@@ -241,7 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_prev_d = document.querySelector(".btn-prev-date");
     const fn_btn_prev_d = (e) => {
-        if (e) return;
         const date = parseInt(document.getElementById("cal-date").innerText);
         if (document.getElementById(`c${date - 1}`) !== null) {
             load_memo(date - 1);
@@ -251,7 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_next_d = document.querySelector(".btn-next-date");
     const fn_btn_next_d = (e) => {
-        if (e) return;
         const date = parseInt(document.getElementById("cal-date").innerText);
         if (document.getElementById(`c${date + 1}`) !== null) {
             load_memo(date + 1);
@@ -261,7 +257,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btns_close = document.querySelectorAll(".modal-close");
     const fn_btn_close = (e) => {
-        if (e) return;
         document.querySelector(".modal").style.display = "none";
     };
     for (const btn_close of btns_close) {
@@ -270,7 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_save = document.querySelector(".btn-save");
     const fn_btn_save = (e) => {
-        if (e) return;
         const text = document.querySelector("input");
         if (text.value === "") {
             return;
