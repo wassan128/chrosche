@@ -102,6 +102,9 @@ const onclk_edit = (edit) => {
         input.addEventListener("keyup", (e) => {
             if (e.keyCode === 13) {
                 const after = input.value;
+				if (after === "") {
+					return;
+				}
                 chrome.storage.local.get(year, (res) => {
                     res[year][month][date].forEach((e, idx) => {
                         const txt = e.replace(marker_done, "");
@@ -181,6 +184,9 @@ class Calendar {
         this.month = this.cal.month() + 1;
     }
     draw() {
+		const fire_mark = document.createElement("i");
+		fire_mark.setAttribute("class", "fa fa-fire");
+
         document.getElementById("cal-year").innerText = this.year;
         document.getElementById("cal-month").innerText = this.month;
 
