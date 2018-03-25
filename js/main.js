@@ -7,6 +7,28 @@ const get_ym = () => {
     return [year, month];
 };
 
+const add_tag = (tag) => {
+	if (tag === "") return;
+	chrome.storage.local.get("config", (res) => {
+		if (typeof(res["config"]) === "undefined") {
+			res["config"] = {};
+		}
+		if (typeof(res["config"]["tags"]) === "undefined") {
+			res["config"]["tags"] = [tag];
+		} else {
+			res["config"]["tags"].push(tag);
+		}
+		chrome.storage.local.set(res, () => {});
+	});
+};
+
+const del_tag = (tag) => {
+	chrome.storage.local.get("config", (res) => {
+		res["config"]["tags"] = res["config"]["tags"].filter((m, i, self) => self.indexOf(tag) !== i);
+		chrome.storage.local.set(res, () => {});
+	});
+};
+
 const load_memo = (date) => {
     const [year, month] = get_ym();
     document.getElementById("cal-date").innerText = date;
