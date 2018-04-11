@@ -185,13 +185,20 @@ main {
 		form * {
 			font-size: 8pt;
 		}
-		form input {
-			width: 60%;
+		form select, form input {
 			border: none;
-			padding: 1em;
 			outline: none;
 		}
-		form input:focus {
+		form input.memo-tags {
+			width: 20%;
+			padding: 1em 0.5em;
+			border-left: #ccc 1px dotted;
+		}
+		form input {
+			width: 55%;
+			padding: 1em;
+		}
+		form *:focus {
 			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
 		button.btn-save {

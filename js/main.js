@@ -7,29 +7,54 @@ const get_ym = () => {
     return [year, month];
 };
 
+const dsp_tag = () => {
+    chrome.storage.local.get("config", (res) => {
+        if (typeof(res["config"]) === "undefined" || typeof(res["config"]["tags"]) === "undefined") {
+            return;
+        }
+        for (const tag of res["config"]["tags"]) {
+            const select = document.getElementById("tags");
+            const opt = document.createElement("option");
+            opt.innerText = tag;
+            select.appendChild(opt);
+            console.log(tag);
+        }
+    });
+};
+
 const add_tag = (tag) => {
-	if (tag === "") return;
-	chrome.storage.local.get("config", (res) => {
-		if (typeof(res["config"]) === "undefined") {
-			res["config"] = {};
-		}
-		if (typeof(res["config"]["tags"]) === "undefined") {
-			res["config"]["tags"] = [tag];
-		} else {
-			res["config"]["tags"].push(tag);
-		}
-		chrome.storage.local.set(res, () => {});
-	});
+    if (tag === "") return;
+    chrome.storage.local.get("config", (res) => {
+        if (typeof(res["config"]) === "undefined") {
+            res["config"] = {};
+        }
+        if (typeof(res["config"]["tags"]) === "undefined") {
+            res["config"]["tags"] = [tag];
+        } else {
+            if (res["config"]["tags"].indexOf(tag) === -1) {
+                res["config"]["tags"].push(tag);
+            }
+        }
+        chrome.storage.local.set(res, () => {});
+    });
 };
 
 const del_tag = (tag) => {
-	chrome.storage.local.get("config", (res) => {
-		res["config"]["tags"] = res["config"]["tags"].filter((m, i, self) => self.indexOf(tag) !== i);
-		chrome.storage.local.set(res, () => {});
-	});
+    chrome.storage.local.get("config", (res) => {
+        res["config"]["tags"] = res["config"]["tags"].filter((m, i, self) => self.indexOf(tag) !== i);
+        chrome.storage.local.set(res, () => {});
+    });
 };
 
 const load_memo = (date) => {
+    const tag_color = [
+        "#ff6347",
+        "blue",
+        "green",
+        "gold",
+        "pink",
+        "purple"
+    ];
     const [year, month] = get_ym();
     document.getElementById("cal-date").innerText = date;
     chrome.storage.local.get(year, (res) => {
@@ -124,9 +149,9 @@ const onclk_edit = (edit) => {
         input.addEventListener("keyup", (e) => {
             if (e.keyCode === 13) {
                 const after = input.value;
-				if (after === "") {
-					return;
-				}
+                if (after === "") {
+                    return;
+                }
                 chrome.storage.local.get(year, (res) => {
                     res[year][month][date].forEach((e, idx) => {
                         const txt = e.replace(marker_done, "");
@@ -206,8 +231,8 @@ class Calendar {
         this.month = this.cal.month() + 1;
     }
     draw() {
-		const fire_mark = document.createElement("i");
-		fire_mark.setAttribute("class", "fa fa-fire");
+        const fire_mark = document.createElement("i");
+        fire_mark.setAttribute("class", "fa fa-fire");
 
         document.getElementById("cal-year").innerText = this.year;
         document.getElementById("cal-month").innerText = this.month;
@@ -248,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const cal = new Calendar();
     cal.draw();
     coloring();
+    dsp_tag();
 
     const btn_prev_m = document.querySelector(".btn-prev-month");
     const fn_btn_prev_m = (e) => {
@@ -293,10 +319,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_save = document.querySelector(".btn-save");
     const fn_btn_save = (e) => {
-        const text = document.querySelector("input");
+        const text = document.querySelector(".memo-text");
         if (text.value === "") {
+            alert("予定の内容を入力してください");
             return;
         }
+
+        const tag = document.querySelector(".memo-tags");
+        const task_data = ((tag) => {
+            if (tag === "") {
+                return text.value;
+            } else {
+                add_tag(tag);
+                return `${text.value} #${tag}`;
+            }
+        })(tag.value);
+		
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
         chrome.storage.local.get(year, (res) => {
@@ -307,16 +345,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 res[year][month] = {};
             }
             if (typeof(res[year][month][date]) === "undefined") {
-                res[year][month][date] = [text.value];
+                res[year][month][date] = [task_data];
             } else {
-                res[year][month][date].push(text.value);
+                res[year][month][date].push(task_data);
             }
             chrome.storage.local.set(res, () => {
                 const ul = document.querySelector("ul");
-                const li = generate_li(text.value);
+                const li = generate_li(task_data);
                 ul.appendChild(li);
                 coloring();
                 text.value = "";
+                tag.value = "";
             });
         });
     };
