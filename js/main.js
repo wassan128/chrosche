@@ -7,54 +7,7 @@ const get_ym = () => {
     return [year, month];
 };
 
-const dsp_tag = () => {
-    chrome.storage.local.get("config", (res) => {
-        if (typeof(res["config"]) === "undefined" || typeof(res["config"]["tags"]) === "undefined") {
-            return;
-        }
-        for (const tag of res["config"]["tags"]) {
-            const select = document.getElementById("tags");
-            const opt = document.createElement("option");
-            opt.innerText = tag;
-            select.appendChild(opt);
-            console.log(tag);
-        }
-    });
-};
-
-const add_tag = (tag) => {
-    if (tag === "") return;
-    chrome.storage.local.get("config", (res) => {
-        if (typeof(res["config"]) === "undefined") {
-            res["config"] = {};
-        }
-        if (typeof(res["config"]["tags"]) === "undefined") {
-            res["config"]["tags"] = [tag];
-        } else {
-            if (res["config"]["tags"].indexOf(tag) === -1) {
-                res["config"]["tags"].push(tag);
-            }
-        }
-        chrome.storage.local.set(res, () => {});
-    });
-};
-
-const del_tag = (tag) => {
-    chrome.storage.local.get("config", (res) => {
-        res["config"]["tags"] = res["config"]["tags"].filter((m, i, self) => self.indexOf(tag) !== i);
-        chrome.storage.local.set(res, () => {});
-    });
-};
-
-const load_memo = (date) => {
-    const tag_color = [
-        "#ff6347",
-        "blue",
-        "green",
-        "gold",
-        "pink",
-        "purple"
-    ];
+const load_task = (date) => {
     const [year, month] = get_ym();
     document.getElementById("cal-date").innerText = date;
     chrome.storage.local.get(year, (res) => {
@@ -65,7 +18,7 @@ const load_memo = (date) => {
         }
 
         for (const l of res[year][month][date]) {
-            const li = generate_li(l);
+            const li = gen_taskbox(l);
             ul.appendChild(li);
         }
     });
@@ -101,7 +54,7 @@ const coloring = () => {
 
 const onclk_td = (e) => {
     const date = e.target.innerText;
-    load_memo(date);
+    load_task(date);
     document.querySelector(".modal").style.display = "block";
     document.querySelector(".modal-box").style.display = "block";
 };
@@ -140,7 +93,6 @@ const onclk_edit = (edit) => {
         const date = document.getElementById("cal-date").innerText;
 
         const input = document.createElement("input");
-        const span = li.children[0];
         const before = li.innerText;
         input.value = before;
         input.setAttribute("class", "edit-box");
@@ -150,6 +102,7 @@ const onclk_edit = (edit) => {
             if (e.keyCode === 13) {
                 const after = input.value;
                 if (after === "") {
+					// TODO: warning dialog
                     return;
                 }
                 chrome.storage.local.get(year, (res) => {
@@ -160,8 +113,8 @@ const onclk_edit = (edit) => {
                         }
                     });
                     chrome.storage.local.set(res, () => {
-                        li.innerText = after;
-                        li.appendChild(span);
+						li.innerHTML = fmt_task(after)[0];
+						add_acts(li);
                         li.removeAttribute("class", "done-task");
                     });
                 });
@@ -191,14 +144,17 @@ const onclk_del = (del) => {
     del.addEventListener("click", fn_del, false);
 };
 
-const generate_li = (text) => {
-    const li = document.createElement("li");
+const fmt_task = (text) => {
+	let is_done = false;
     if (text.slice(0, 5) === marker_done) {
-        li.setAttribute("class", "done-task");
+		is_done = true;
         text = text.replace(marker_done, "");
-    }
-    li.innerText = text;
-	
+	}
+	const data = text.replace(">", "&gt;").replace("<", "&lt;").replace("'", "&quot;").replace(/(#[^\s#]*)/g, "<a href='$1'>$1</a>")
+	return [data, is_done];
+};
+
+const add_acts = (li) => {
     const act = document.createElement("span");
     const a_done = document.createElement("i");
     a_done.setAttribute("class", "fa fa-check");
@@ -215,7 +171,17 @@ const generate_li = (text) => {
     act.append(a_edit);
     act.append(a_del);
     li.appendChild(act);
-    return li;
+};
+
+const gen_taskbox = (raw_text) => {
+    const box = document.createElement("li");
+	const [task_text, is_done] = fmt_task(raw_text);
+	if (is_done) {
+        box.setAttribute("class", "done-task");
+	}
+	box.innerHTML = task_text;
+	add_acts(box);
+    return box;
 };
 
 class Calendar {
@@ -273,7 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cal = new Calendar();
     cal.draw();
     coloring();
-    dsp_tag();
 
     const btn_prev_m = document.querySelector(".btn-prev-month");
     const fn_btn_prev_m = (e) => {
@@ -295,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fn_btn_prev_d = (e) => {
         const date = parseInt(document.getElementById("cal-date").innerText);
         if (document.getElementById(`c${date - 1}`) !== null) {
-            load_memo(date - 1);
+            load_task(date - 1);
         }
     };
     btn_prev_d.addEventListener("click", fn_btn_prev_d, false);
@@ -304,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fn_btn_next_d = (e) => {
         const date = parseInt(document.getElementById("cal-date").innerText);
         if (document.getElementById(`c${date + 1}`) !== null) {
-            load_memo(date + 1);
+            load_task(date + 1);
         }
     };
     btn_next_d.addEventListener("click", fn_btn_next_d, false);
@@ -325,16 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const tag = document.querySelector(".memo-tags");
-        const task_data = ((tag) => {
-            if (tag === "") {
-                return text.value;
-            } else {
-                add_tag(tag);
-                return `${text.value} #${tag}`;
-            }
-        })(tag.value);
-		
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
         chrome.storage.local.get(year, (res) => {
@@ -345,17 +300,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 res[year][month] = {};
             }
             if (typeof(res[year][month][date]) === "undefined") {
-                res[year][month][date] = [task_data];
+                res[year][month][date] = [text.value];
             } else {
-                res[year][month][date].push(task_data);
+                res[year][month][date].push(text.value);
             }
             chrome.storage.local.set(res, () => {
                 const ul = document.querySelector("ul");
-                const li = generate_li(task_data);
+                const li = gen_taskbox(text.value);
                 ul.appendChild(li);
                 coloring();
                 text.value = "";
-                tag.value = "";
             });
         });
     };
