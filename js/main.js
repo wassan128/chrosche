@@ -21,6 +21,7 @@ const load_task = (date) => {
             const li = gen_taskbox(l);
             ul.appendChild(li);
         }
+		enable_hashtags();
     });
 };
 
@@ -150,8 +151,22 @@ const fmt_task = (text) => {
 		is_done = true;
         text = text.replace(marker_done, "");
 	}
-	const data = text.replace(">", "&gt;").replace("<", "&lt;").replace("'", "&quot;").replace(/(#[^\s#]*)/g, "<a href='$1'>$1</a>")
+	const data = text.replace(">", "&gt;")
+		.replace("<", "&lt;")
+		.replace("'", "&quot;")
+		.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 	return [data, is_done];
+};
+
+const enable_hashtags = () => {
+	const btns_hashtag = document.getElementsByClassName("hashtags");
+	console.log(btns_hashtag);
+    const fn_btn_hashtag = (e) => {
+		console.log(e.target.innerText);
+	};
+	for (const btn_hashtag of btns_hashtag) {
+		btn_hashtag.addEventListener("click", fn_btn_hashtag, false);
+	}
 };
 
 const add_acts = (li) => {
@@ -308,11 +323,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const ul = document.querySelector("ul");
                 const li = gen_taskbox(text.value);
                 ul.appendChild(li);
+
+				enable_hashtags();
                 coloring();
                 text.value = "";
             });
         });
     };
     btn_save.addEventListener("click", fn_btn_save, false);
+
 });
 
