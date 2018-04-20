@@ -169,6 +169,20 @@ const enable_hashtags = () => {
 	}
 };
 
+const find_tags = (tag) => {
+	const ptn = new RegExp(`${tag}(\\s|$)`);
+	const [year, month] = get_ym();
+	chrome.storage.local.get(year, (res) => {
+		for (const date in res[year][month]) {
+			for (const lst of res[year][month][date]) {
+				if (lst.match(ptn)) {
+					console.log(lst);
+				}
+			}
+		}
+	});
+};
+
 const add_acts = (li) => {
     const act = document.createElement("span");
     const a_done = document.createElement("i");
