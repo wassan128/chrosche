@@ -26,9 +26,11 @@
 @keyframes switch-dsp {
 	from {
 		opacity: 0;
+		margin-left: 2em;
 	}
 	to {
 		opacity: 1;
+		margin-left: 0;
 	}
 }
 
@@ -108,7 +110,7 @@ main {
 		.modal-close i:hover {
 			color: #666;
 		}
-
+		
 		.modal-box h3 {
 			border-bottom: 1px solid #DDD;
 			margin-bottom: 0.5em;
@@ -124,17 +126,18 @@ main {
 				color: #666;
 			}
 		#tb-normal, #tb-hashtag {
-			animation-duration: 1s;
-			animation-name: switch-dsp;
 			display: none;
 		}
 		#tb-normal {
-			font-size: 25pt;
+			font-size: 23pt;
 			color: #BBB;
 		}
+		
 		#tb-hashtag {
-			font-size: 20pt;
-			color: #BBB;
+			animation-duration: 0.7s;
+			animation-name: switch-dsp;
+			font-size: 18pt;
+			color: #9b9;
 		}
 
 		.modal-box ul {

@@ -169,7 +169,7 @@ const enable_hashtags = () => {
 		document.querySelector("#memo-form").style.display = "none";
 		document.querySelector("#tb-normal").style.display = "none";
 		document.querySelector("#tb-hashtag").style.display = "block";
-		
+
 		const [year, month] = get_ym();
 		const ul = document.querySelector("ul");
 		ul.innerHTML = "";
@@ -177,8 +177,13 @@ const enable_hashtags = () => {
 			for (const date in res[year][month]) {
 				for (const lst of res[year][month][date]) {
 					if (lst.match(ptn)) {
-						const li = document.createElement("li");
-						li.innerText = `date: ${month}/${date}, content: ${lst}`;
+						const li = gen_taskbox(lst);
+
+						const span = document.createElement("span");
+						span.setAttribute("class", "tag-date");
+						span.innerText = `${month}/${date}`;
+
+						li.appendChild(span);
 						ul.appendChild(li);
 					}
 				}
@@ -323,6 +328,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const btns_close = document.querySelectorAll(".modal-close");
     const fn_btn_close = (e) => {
         document.querySelector(".modal").style.display = "none";
+		document.querySelector("#memo-form").style.display = "block";
+        document.querySelector("#tb-hashtag").style.display = "none";
     };
     for (const btn_close of btns_close) {
         btn_close.addEventListener("click", fn_btn_close, false);
