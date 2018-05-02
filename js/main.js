@@ -58,6 +58,7 @@ const onclk_td = (e) => {
     load_task(date);
     document.querySelector(".modal").style.display = "block";
     document.querySelector(".modal-box").style.display = "block";
+    document.querySelector("#tb-normal").style.display = "block";
 };
 
 const onclk_done = (done) => {
@@ -116,7 +117,8 @@ const onclk_edit = (edit) => {
                     chrome.storage.local.set(res, () => {
 						li.innerHTML = fmt_task(after)[0];
 						add_acts(li);
-                        li.removeAttribute("class", "done-task");
+						enable_hashtags();
+						li.removeAttribute("class", "done-task");
                     });
                 });
             }
@@ -160,27 +162,32 @@ const fmt_task = (text) => {
 
 const enable_hashtags = () => {
 	const btns_hashtag = document.getElementsByClassName("hashtags");
-	console.log(btns_hashtag);
     const fn_btn_hashtag = (e) => {
-		console.log(e.target.innerText);
+		const target = e.target.innerText;
+		const ptn = new RegExp(`${target}(\\s|$)`);
+		document.getElementById("cal-tag").innerText = target;
+		document.querySelector("#memo-form").style.display = "none";
+		document.querySelector("#tb-normal").style.display = "none";
+		document.querySelector("#tb-hashtag").style.display = "block";
+		
+		const [year, month] = get_ym();
+		const ul = document.querySelector("ul");
+		ul.innerHTML = "";
+		chrome.storage.local.get(year, (res) => {
+			for (const date in res[year][month]) {
+				for (const lst of res[year][month][date]) {
+					if (lst.match(ptn)) {
+						const li = document.createElement("li");
+						li.innerText = `date: ${month}/${date}, content: ${lst}`;
+						ul.appendChild(li);
+					}
+				}
+			}
+		});
 	};
 	for (const btn_hashtag of btns_hashtag) {
 		btn_hashtag.addEventListener("click", fn_btn_hashtag, false);
 	}
-};
-
-const find_tags = (tag) => {
-	const ptn = new RegExp(`${tag}(\\s|$)`);
-	const [year, month] = get_ym();
-	chrome.storage.local.get(year, (res) => {
-		for (const date in res[year][month]) {
-			for (const lst of res[year][month][date]) {
-				if (lst.match(ptn)) {
-					console.log(lst);
-				}
-			}
-		}
-	});
 };
 
 const add_acts = (li) => {
@@ -303,6 +310,16 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     btn_next_d.addEventListener("click", fn_btn_next_d, false);
 
+	const btn_prev_t = document.querySelector(".btn-prev-tag");
+	const fn_btn_prev_t = (e) => {
+		const date = parseInt(document.getElementById("cal-date").innerText);
+		load_task(date);
+		document.querySelector("#memo-form").style.display = "block";
+		document.querySelector("#tb-hashtag").style.display = "none";
+		document.querySelector("#tb-normal").style.display = "block";
+	};
+    btn_prev_t.addEventListener("click", fn_btn_prev_t, false);
+
     const btns_close = document.querySelectorAll(".modal-close");
     const fn_btn_close = (e) => {
         document.querySelector(".modal").style.display = "none";
@@ -345,6 +362,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
     btn_save.addEventListener("click", fn_btn_save, false);
-
 });
 

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8"/>
 	<title>Home - chrosche</title>
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	<link rel="stylesheet" href="fontawesome/css/font-awesome.min.css"/>
 	<link rel="stylesheet" href="css/style.css"/>
 	<script src="lib/moment.min.js"></script>
 	<script src="js/main.js"></script>
@@ -16,13 +16,21 @@
 					<a class="modal-close"><i class="fa fa-close"></i></a>
 				</p>
 				<div>
-					<h3>
-						<i class="fa fa-angle-left btn-prev-date"></i>
-						<span id="cal-date">NaN</span>日
-						<i class="fa fa-angle-right btn-next-date"></i>
-					</h3>
+					<div id="tb-normal">
+						<h3>
+							<i class="fa fa-angle-left btn-prev-date"></i>
+							<span id="cal-date">NaN</span>日
+							<i class="fa fa-angle-right btn-next-date"></i>
+						</h3>
+					</div>
+					<div id="tb-hashtag">
+						<h3>
+							<i class="fa fa-angle-left btn-prev-tag"></i>
+							<span id="cal-tag">Null</span>
+						</h3>
+					</div>
 				</div>
-				<form>
+				<form id="memo-form">
 					<input class="memo-text" type="text" placeholder="予定の内容を入力"/>
 					<input type="text" style="display: none"/>
 					<button type="button" class="btn-save">Add</button>

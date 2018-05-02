@@ -23,6 +23,14 @@
 	content: " ";
 	clear: both;
 }
+@keyframes switch-dsp {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
 
 i.fa {
 	margin-right: 0.2em;
@@ -81,6 +89,10 @@ main {
 		width: 60%;
 		height: 60%;
 	}
+	.modal-tag {
+		width: 50%;
+		height: 60%;
+	}
 		p.modal-control { 
 			float: right;
 		}
@@ -96,9 +108,8 @@ main {
 		.modal-close i:hover {
 			color: #666;
 		}
+
 		.modal-box h3 {
-			font-size: 25pt;
-			color: #BBB;
 			border-bottom: 1px solid #DDD;
 			margin-bottom: 0.5em;
 			user-select: none;
@@ -112,6 +123,20 @@ main {
 			.modal-box h3 i:hover {
 				color: #666;
 			}
+		#tb-normal, #tb-hashtag {
+			animation-duration: 1s;
+			animation-name: switch-dsp;
+			display: none;
+		}
+		#tb-normal {
+			font-size: 25pt;
+			color: #BBB;
+		}
+		#tb-hashtag {
+			font-size: 20pt;
+			color: #BBB;
+		}
+
 		.modal-box ul {
 			margin: 1em 0;
 			list-style: none;
