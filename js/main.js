@@ -25,6 +25,54 @@ const load_task = (date) => {
     });
 };
 
+const save_task = () => {
+	const sanitize = (text) => {
+		return text.replace("<", "&lt;")
+		.replace("'", "&quot;")
+		.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
+	};
+
+	const t_box = document.querySelector(".memo-text");
+	if (t_box.value === "") {
+		alert("予定の内容を入力してください");
+		return;
+	}
+
+	const ts = moment().unix();
+	const body = sanitize(t_box.value);
+	const memo = {
+		"id": `m${ts}`,
+		"body": body,
+		"is_done": false
+	};
+	console.log(memo);
+
+	const [year, month] = get_ym();
+	const date = document.getElementById("cal-date").innerText;
+	chrome.storage.local.get(year, (res) => {
+		if (typeof(res[year]) === "undefined") {
+			res[year] = {};
+		}
+		if (typeof(res[year][month]) === "undefined") {
+			res[year][month] = {};
+		}
+		if (typeof(res[year][month][date]) === "undefined") {
+			res[year][month][date] = [memo];
+		} else {
+			res[year][month][date].push(memo);
+		}
+		chrome.storage.local.set(res, () => {
+			const ul = document.querySelector("ul");
+			const li = gen_taskbox(memo.body);
+			ul.appendChild(li);
+
+			enable_hashtags();
+			coloring();
+			t_box.value = "";
+		});
+	});
+};
+
 const coloring = () => {
     const color = [
         "rgba(238, 238, 238, 1.0)",
@@ -337,36 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_save = document.querySelector(".btn-save");
     const fn_btn_save = (e) => {
-        const text = document.querySelector(".memo-text");
-        if (text.value === "") {
-            alert("予定の内容を入力してください");
-            return;
-        }
-
-        const [year, month] = get_ym();
-        const date = document.getElementById("cal-date").innerText;
-        chrome.storage.local.get(year, (res) => {
-            if (typeof(res[year]) === "undefined") {
-                res[year] = {};
-            }
-            if (typeof(res[year][month]) === "undefined") {
-                res[year][month] = {};
-            }
-            if (typeof(res[year][month][date]) === "undefined") {
-                res[year][month][date] = [text.value];
-            } else {
-                res[year][month][date].push(text.value);
-            }
-            chrome.storage.local.set(res, () => {
-                const ul = document.querySelector("ul");
-                const li = gen_taskbox(text.value);
-                ul.appendChild(li);
-
-				enable_hashtags();
-                coloring();
-                text.value = "";
-            });
-        });
+		save_task();
     };
     btn_save.addEventListener("click", fn_btn_save, false);
 });
