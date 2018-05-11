@@ -28,13 +28,15 @@ const load_memos = (date) => {
     });
 };
 
-const save_memo = () => {
-	const sanitize = (text) => {
-		return text.replace("<", "&lt;")
-		.replace("'", "&quot;")
-		.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
-	};
+/* util */
+const sanitize = (text) => {
+	return text.replace("<", "&lt;")
+	.replace("'", "&quot;")
+	.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
+};
+const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 
+const save_memo = () => {
 	const t_box = document.querySelector(".memo-text");
 	if (t_box.value === "") {
 		alert("予定の内容を入力してください");
@@ -145,27 +147,28 @@ const onclk_edit = (edit) => {
         const date = document.getElementById("cal-date").innerText;
 
         const input = document.createElement("input");
-        const before = li.innerText;
-        input.value = before;
+        const target = get_id(li.id);
+        input.value = li.innerText;
         input.setAttribute("class", "edit-box");
         li.innerText = "";
         li.appendChild(input);
         input.addEventListener("keyup", (e) => {
             if (e.keyCode === 13) {
-                const after = input.value;
+                const after = sanitize(input.value);
                 if (after === "") {
 					// TODO: warning dialog
                     return;
                 }
                 chrome.storage.local.get(year, (res) => {
-                    res[year][month][date].forEach((e, idx) => {
-                        const txt = e.replace(marker_done, "");
-                        if (txt === before) {
-                            res[year][month][date][idx] = after;
+                    res[year][month][date].forEach((memo, idx) => {
+                        if (memo.id === target) {
+                            res[year][month][date][idx].body = after;
+							console.log("edited");
                         }
                     });
                     chrome.storage.local.set(res, () => {
-						li.innerHTML = fmt_task(after)[0];
+						console.log(res[year][month][date]);
+						li.innerHTML = after;
 						add_acts(li);
 						enable_hashtags();
 						li.removeAttribute("class", "done-task");
@@ -185,7 +188,7 @@ const onclk_del = (del) => {
         }
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
-        const target = parseInt(li.id.slice(MEMO_ID_PREFIX.length));
+        const target = get_id(li.id);
         chrome.storage.local.get(year, (res) => {
 			res[year][month][date] = res[year][month][date].filter(x => x.id !== target);
             chrome.storage.local.set(res, () => {
