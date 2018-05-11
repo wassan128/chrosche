@@ -1,5 +1,6 @@
 "use strict";
 
+const MEMO_ID_PREFIX = "m_";
 const marker_done = "DONE:";
 const get_ym = () => {
     const year = document.getElementById("cal-year").innerText;
@@ -7,7 +8,7 @@ const get_ym = () => {
     return [year, month];
 };
 
-const load_task = (date) => {
+const load_memos = (date) => {
     const [year, month] = get_ym();
     document.getElementById("cal-date").innerText = date;
     chrome.storage.local.get(year, (res) => {
@@ -17,15 +18,17 @@ const load_task = (date) => {
             return;
         }
 
-        for (const l of res[year][month][date]) {
-            const li = gen_taskbox(l);
+        for (const memo of res[year][month][date]) {
+			console.log(memo);
+            const li = gen_taskbox(memo);
+			li.setAttribute("id", `${MEMO_ID_PREFIX}${memo.id}`);
             ul.appendChild(li);
         }
 		enable_hashtags();
     });
 };
 
-const save_task = () => {
+const save_memo = () => {
 	const sanitize = (text) => {
 		return text.replace("<", "&lt;")
 		.replace("'", "&quot;")
@@ -41,11 +44,10 @@ const save_task = () => {
 	const ts = moment().unix();
 	const body = sanitize(t_box.value);
 	const memo = {
-		"id": `m${ts}`,
+		"id": ts,
 		"body": body,
 		"is_done": false
 	};
-	console.log(memo);
 
 	const [year, month] = get_ym();
 	const date = document.getElementById("cal-date").innerText;
@@ -63,7 +65,7 @@ const save_task = () => {
 		}
 		chrome.storage.local.set(res, () => {
 			const ul = document.querySelector("ul");
-			const li = gen_taskbox(memo.body);
+			const li = gen_taskbox(memo);
 			ul.appendChild(li);
 
 			enable_hashtags();
@@ -103,7 +105,7 @@ const coloring = () => {
 
 const onclk_td = (e) => {
     const date = e.target.innerText;
-    load_task(date);
+    load_memos(date);
     document.querySelector(".modal").style.display = "block";
     document.querySelector(".modal-box").style.display = "block";
     document.querySelector("#tb-normal").style.display = "block";
@@ -183,9 +185,9 @@ const onclk_del = (del) => {
         }
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
-        const target = li.classList.contains("done-task") ? `${marker_done}${li.innerText}` : li.innerText;
+        const target = parseInt(li.id.slice(MEMO_ID_PREFIX.length));
         chrome.storage.local.get(year, (res) => {
-            res[year][month][date] = res[year][month][date].filter((m, i, self) => self.indexOf(target) !== i);
+			res[year][month][date] = res[year][month][date].filter(x => x.id !== target);
             chrome.storage.local.set(res, () => {
                 li.parentNode.removeChild(li);
                 coloring();
@@ -193,19 +195,6 @@ const onclk_del = (del) => {
         });
     };
     del.addEventListener("click", fn_del, false);
-};
-
-const fmt_task = (text) => {
-	let is_done = false;
-    if (text.slice(0, 5) === marker_done) {
-		is_done = true;
-        text = text.replace(marker_done, "");
-	}
-	const data = text.replace(">", "&gt;")
-		.replace("<", "&lt;")
-		.replace("'", "&quot;")
-		.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
-	return [data, is_done];
 };
 
 const enable_hashtags = () => {
@@ -262,13 +251,12 @@ const add_acts = (li) => {
     li.appendChild(act);
 };
 
-const gen_taskbox = (raw_text) => {
+const gen_taskbox = (memo) => {
     const box = document.createElement("li");
-	const [task_text, is_done] = fmt_task(raw_text);
-	if (is_done) {
+	if (memo.is_done) {
         box.setAttribute("class", "done-task");
 	}
-	box.innerHTML = task_text;
+	box.innerHTML = memo.body;
 	add_acts(box);
     return box;
 };
@@ -349,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fn_btn_prev_d = (e) => {
         const date = parseInt(document.getElementById("cal-date").innerText);
         if (document.getElementById(`c${date - 1}`) !== null) {
-            load_task(date - 1);
+            load_memos(date - 1);
         }
     };
     btn_prev_d.addEventListener("click", fn_btn_prev_d, false);
@@ -358,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fn_btn_next_d = (e) => {
         const date = parseInt(document.getElementById("cal-date").innerText);
         if (document.getElementById(`c${date + 1}`) !== null) {
-            load_task(date + 1);
+            load_memos(date + 1);
         }
     };
     btn_next_d.addEventListener("click", fn_btn_next_d, false);
@@ -366,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btn_prev_t = document.querySelector(".btn-prev-tag");
 	const fn_btn_prev_t = (e) => {
 		const date = parseInt(document.getElementById("cal-date").innerText);
-		load_task(date);
+		load_memos(date);
 		document.querySelector("#memo-form").style.display = "block";
 		document.querySelector("#tb-hashtag").style.display = "none";
 		document.querySelector("#tb-normal").style.display = "block";
@@ -385,7 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btn_save = document.querySelector(".btn-save");
     const fn_btn_save = (e) => {
-		save_task();
+		save_memo();
     };
     btn_save.addEventListener("click", fn_btn_save, false);
 });
