@@ -1,7 +1,7 @@
 "use strict";
 
 const MEMO_ID_PREFIX = "m_";
-const marker_done = "DONE:";
+const DONE_CLASS = "done-task";
 const get_ym = () => {
     const year = document.getElementById("cal-year").innerText;
     const month = document.getElementById("cal-month").innerText;
@@ -118,21 +118,18 @@ const onclk_done = (done) => {
         const li = e.target.parentNode.parentNode;
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
+		const target = get_id(li.id);
         chrome.storage.local.get(year, (res) => {
-            let is_done = false;
-            res[year][month][date].forEach((e, idx) => {
-                if (e === li.innerText) {
-                    res[year][month][date][idx] = `${marker_done}${e}`;
-                    is_done = true;
-                } else if (e === `${marker_done}${li.innerText}`) {
-                    res[year][month][date][idx] = e.replace(marker_done, "");
-                }
+            res[year][month][date].forEach((memo, idx) => {
+                if (memo.id === target) {
+					res[year][month][date][idx].is_done = !(memo.is_done);
+				}
             });
             chrome.storage.local.set(res, () => {
-                if (is_done) {
-                    li.setAttribute("class", "done-task");
+                if (li.getAttribute("class") === DONE_CLASS) {
+                    li.removeAttribute("class", DONE_CLASS);
                 } else {
-                    li.removeAttribute("class", "done-task");
+                    li.setAttribute("class", DONE_CLASS);
                 }
             });
         });
@@ -171,7 +168,7 @@ const onclk_edit = (edit) => {
 						li.innerHTML = after;
 						add_acts(li);
 						enable_hashtags();
-						li.removeAttribute("class", "done-task");
+						li.removeAttribute("class", DONE_CLASS);
                     });
                 });
             }
@@ -257,7 +254,7 @@ const add_acts = (li) => {
 const gen_taskbox = (memo) => {
     const box = document.createElement("li");
 	if (memo.is_done) {
-        box.setAttribute("class", "done-task");
+        box.setAttribute("class", DONE_CLASS);
 	}
 	box.innerHTML = memo.body;
 	add_acts(box);
