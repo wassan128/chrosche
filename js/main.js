@@ -168,7 +168,6 @@ const onclk_edit = (edit) => {
 						li.innerHTML = after;
 						add_acts(li);
 						enable_hashtags();
-						li.removeAttribute("class", DONE_CLASS);
                     });
                 });
             }
