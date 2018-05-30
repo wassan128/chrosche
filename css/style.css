@@ -4,6 +4,7 @@
 	padding: 0;
 	font-weight: normal;
 	scrollbar-base-color: transparent;
+	font-family:  "Source Code Pro", "Meiryo UI"
 }
 *::-webkit-scrollbar {
 	width: 5px;
@@ -48,18 +49,6 @@ body {
 	background-position: center;
 	transition: 1s;
 }
-body::before {
-	content: "";
-	background: rgba(255, 255, 255, 0.5);
-	opacity: 0.7;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	z-index: -1;
-}
-
 main {
 	height: 100%;
 	overflow: auto;
@@ -129,9 +118,13 @@ main {
 			display: none;
 		}
 		#tb-normal {
-			font-size: 23pt;
+			font-size: 13pt;
 			color: #BBB;
 		}
+			#cal-date {
+				font-size: 30pt;
+				margin-right: 5px;
+			}
 		
 		#tb-hashtag {
 			animation-duration: 0.7s;
@@ -152,6 +145,7 @@ main {
 				border-bottom: 1px dashed #eee;
 				cursor: pointer;
 				transition: 0.3s;
+				color: #444;
 			}
 			.modal-box li.done-task {
 				background: #c6e48b;
@@ -260,11 +254,15 @@ main {
 		header h2 {
 			text-align: center;
 			font-size: 20pt;
-			color: #444;
+			color: #DDD;
 			padding: 0.1em;
-			background: rgba(255, 255, 255, 0.9);
 			user-select: none;
+			background: rgba(0, 0, 0, 0.7);
 		}
+		header h2:before {
+			filter: blur(30px);
+		}
+
 			header h2 > i {
 				color: #888;
 				cursor: pointer;
