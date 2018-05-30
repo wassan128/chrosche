@@ -1,13 +1,22 @@
 "use strict";
 
+/* constants */
 const MEMO_ID_PREFIX = "m_";
-const DONE_CLASS = "done-task";
+
+/* utils */
 const get_ym = () => {
     const year = document.getElementById("cal-year").innerText;
     const month = document.getElementById("cal-month").innerText;
     return [year, month];
 };
+const sanitize = (text) => {
+	return text.replace("<", "&lt;")
+	.replace("'", "&quot;")
+	.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
+};
+const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 
+/* functions */
 const load_memos = (date) => {
     const [year, month] = get_ym();
     document.getElementById("cal-date").innerText = date;
@@ -21,20 +30,11 @@ const load_memos = (date) => {
         for (const memo of res[year][month][date]) {
 			console.log(memo);
             const li = gen_taskbox(memo);
-			li.setAttribute("id", `${MEMO_ID_PREFIX}${memo.id}`);
             ul.appendChild(li);
         }
 		enable_hashtags();
     });
 };
-
-/* util */
-const sanitize = (text) => {
-	return text.replace("<", "&lt;")
-	.replace("'", "&quot;")
-	.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
-};
-const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 
 const save_memo = () => {
 	const t_box = document.querySelector(".memo-text");
@@ -79,11 +79,11 @@ const save_memo = () => {
 
 const coloring = () => {
     const color = [
-        "rgba(238, 238, 238, 1.0)",
-        "rgba(198, 228, 139, 1.0)",
-        "rgba(123, 201, 111, 1.0)",
-        "rgba(35, 154, 59, 1.0)",
-        "rgba(25, 97, 39, 1.0)"
+        "rgba(238, 238, 238, 0.9)",
+        "rgba(198, 228, 139, 0.9)",
+        "rgba(123, 201, 111, 0.9)",
+        "rgba(35, 154, 59, 0.9)",
+        "rgba(25, 97, 39, 0.9)"
     ];
     const [year, month] = get_ym();
     chrome.storage.local.get(year, (res) => {
@@ -126,10 +126,10 @@ const onclk_done = (done) => {
 				}
             });
             chrome.storage.local.set(res, () => {
-                if (li.getAttribute("class") === DONE_CLASS) {
-                    li.removeAttribute("class", DONE_CLASS);
+                if (li.getAttribute("class") === "done-task") {
+                    li.removeAttribute("class", "done-task");
                 } else {
-                    li.setAttribute("class", DONE_CLASS);
+                    li.setAttribute("class", "done-task");
                 }
             });
         });
@@ -200,7 +200,7 @@ const enable_hashtags = () => {
 	const btns_hashtag = document.getElementsByClassName("hashtags");
     const fn_btn_hashtag = (e) => {
 		const target = e.target.innerText;
-		const ptn = new RegExp(`${target}(\\s|$)`);
+		const ptn = new RegExp(`${target}</a>`);
 		document.getElementById("cal-tag").innerText = target;
 		document.querySelector("#memo-form").style.display = "none";
 		document.querySelector("#tb-normal").style.display = "none";
@@ -211,17 +211,19 @@ const enable_hashtags = () => {
 		ul.innerHTML = "";
 		chrome.storage.local.get(year, (res) => {
 			for (const date in res[year][month]) {
-				for (const lst of res[year][month][date]) {
-					if (lst.match(ptn)) {
-						const li = gen_taskbox(lst);
+				for (const memo of res[year][month][date]) {
+					console.log(memo.body, ptn)
+					if (memo.body.match(ptn)) {
+						const li = gen_taskbox(memo);
 
 						const span = document.createElement("span");
 						span.setAttribute("class", "tag-date");
 						span.innerText = `${month}/${date}`;
-
+						
 						li.appendChild(span);
 						ul.appendChild(li);
 					}
+
 				}
 			}
 		});
@@ -253,9 +255,10 @@ const add_acts = (li) => {
 const gen_taskbox = (memo) => {
     const box = document.createElement("li");
 	if (memo.is_done) {
-        box.setAttribute("class", DONE_CLASS);
+        box.setAttribute("class", "done-task");
 	}
 	box.innerHTML = memo.body;
+	box.setAttribute("id", `${MEMO_ID_PREFIX}${memo.id}`);
 	add_acts(box);
     return box;
 };
@@ -297,7 +300,7 @@ class Calendar {
             td.innerText = date;
             td.setAttribute("id", `c${date}`);
             td.style.color = "#333";
-            td.style.background = "rgba(238, 238, 238, 1.0)";
+            td.style.background = "rgba(238, 238, 238, 0.9)";
             td.addEventListener("click", onclk_td, false);
         }
     }
