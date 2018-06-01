@@ -4,6 +4,7 @@
 	padding: 0;
 	font-weight: normal;
 	scrollbar-base-color: transparent;
+	font-family:  "Source Code Pro", "Meiryo UI"
 }
 *::-webkit-scrollbar {
 	width: 5px;
@@ -43,23 +44,11 @@ html, body {
 	height: 100%;
 }
 body {
-	background-image: url("../image/bg.jpg");
+	background-image: url("../image/bg5.jpg");
 	background-size: cover;
 	background-position: center;
 	transition: 1s;
 }
-body::before {
-	content: "";
-	background: rgba(255, 255, 255, 0.5);
-	opacity: 0.7;
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	left: 0;
-	z-index: -1;
-}
-
 main {
 	height: 100%;
 	overflow: auto;
@@ -129,9 +118,13 @@ main {
 			display: none;
 		}
 		#tb-normal {
-			font-size: 23pt;
+			font-size: 13pt;
 			color: #BBB;
 		}
+			#cal-date {
+				font-size: 30pt;
+				margin-right: 5px;
+			}
 		
 		#tb-hashtag {
 			animation-duration: 0.7s;
@@ -152,8 +145,9 @@ main {
 				border-bottom: 1px dashed #eee;
 				cursor: pointer;
 				transition: 0.3s;
+				color: #444;
 			}
-			.modal-box li.done-task {
+			.modal-box li.done-memo {
 				background: #c6e48b;
 			}
 			.modal-box li:last-child {
@@ -194,7 +188,7 @@ main {
 						color: #fff;
 						transition: 0.3s;
 					}
-					.modal-box li.done-task span i.fa-check {
+					.modal-box li.done-memo span i.fa-check {
 						color: #30ce30;
 						background: #fff;
 					}
@@ -218,6 +212,7 @@ main {
 					border: none;
 					background: #eee;
 					box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.2);
+					font-size: 9pt;
 					outline: none;
 				}
 	form {
@@ -259,11 +254,15 @@ main {
 		header h2 {
 			text-align: center;
 			font-size: 20pt;
-			color: #444;
+			color: #DDD;
 			padding: 0.1em;
-			background: rgba(255, 255, 255, 0.9);
 			user-select: none;
+			background: rgba(0, 0, 0, 0.7);
 		}
+		header h2:before {
+			filter: blur(30px);
+		}
+
 			header h2 > i {
 				color: #888;
 				cursor: pointer;
@@ -272,7 +271,7 @@ main {
 			}
 			header h2 > i:hover {
 				font-weight: bold;
-				color: rgb(25, 97, 39);
+				color: #ccc;
 			}
 			header h2 p {
 				font-size: 10pt;
