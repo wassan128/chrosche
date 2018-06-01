@@ -44,7 +44,7 @@ html, body {
 	height: 100%;
 }
 body {
-	background-image: url("../image/bg5.jpg");
+	background-image: url("../image/bg.jpg");
 	background-size: cover;
 	background-position: center;
 	transition: 1s;
