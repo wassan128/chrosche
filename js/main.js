@@ -28,11 +28,10 @@ const load_memos = (date) => {
         }
 
         for (const memo of res[year][month][date]) {
-			console.log(memo);
-            const li = gen_taskbox(memo);
+            const li = gen_memobox(memo);
             ul.appendChild(li);
         }
-		enable_hashtags();
+		onclk_hashtags();
     });
 };
 
@@ -67,10 +66,10 @@ const save_memo = () => {
 		}
 		chrome.storage.local.set(res, () => {
 			const ul = document.querySelector("ul");
-			const li = gen_taskbox(memo);
+			const li = gen_memobox(memo);
 			ul.appendChild(li);
 
-			enable_hashtags();
+			onclk_hashtags();
 			coloring();
 			t_box.value = "";
 		});
@@ -126,10 +125,10 @@ const onclk_done = (done) => {
 				}
             });
             chrome.storage.local.set(res, () => {
-                if (li.getAttribute("class") === "done-task") {
-                    li.removeAttribute("class", "done-task");
+                if (li.getAttribute("class") === "done-memo") {
+                    li.removeAttribute("class", "done-memo");
                 } else {
-                    li.setAttribute("class", "done-task");
+                    li.setAttribute("class", "done-memo");
                 }
             });
         });
@@ -167,7 +166,7 @@ const onclk_edit = (edit) => {
 						console.log(res[year][month][date]);
 						li.innerHTML = after;
 						add_acts(li);
-						enable_hashtags();
+						onclk_hashtags();
                     });
                 });
             }
@@ -196,7 +195,7 @@ const onclk_del = (del) => {
     del.addEventListener("click", fn_del, false);
 };
 
-const enable_hashtags = () => {
+const onclk_hashtags = () => {
 	const btns_hashtag = document.getElementsByClassName("hashtags");
     const fn_btn_hashtag = (e) => {
 		const target = e.target.innerText;
@@ -212,9 +211,8 @@ const enable_hashtags = () => {
 		chrome.storage.local.get(year, (res) => {
 			for (const date in res[year][month]) {
 				for (const memo of res[year][month][date]) {
-					console.log(memo.body, ptn)
 					if (memo.body.match(ptn)) {
-						const li = gen_taskbox(memo);
+						const li = gen_memobox(memo);
 
 						const span = document.createElement("span");
 						span.setAttribute("class", "tag-date");
@@ -252,10 +250,10 @@ const add_acts = (li) => {
     li.appendChild(act);
 };
 
-const gen_taskbox = (memo) => {
+const gen_memobox = (memo) => {
     const box = document.createElement("li");
 	if (memo.is_done) {
-        box.setAttribute("class", "done-task");
+        box.setAttribute("class", "done-memo");
 	}
 	box.innerHTML = memo.body;
 	box.setAttribute("id", `${MEMO_ID_PREFIX}${memo.id}`);

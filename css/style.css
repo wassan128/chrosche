@@ -44,7 +44,7 @@ html, body {
 	height: 100%;
 }
 body {
-	background-image: url("../image/bg.jpg");
+	background-image: url("../image/bg5.jpg");
 	background-size: cover;
 	background-position: center;
 	transition: 1s;
@@ -147,7 +147,7 @@ main {
 				transition: 0.3s;
 				color: #444;
 			}
-			.modal-box li.done-task {
+			.modal-box li.done-memo {
 				background: #c6e48b;
 			}
 			.modal-box li:last-child {
@@ -188,7 +188,7 @@ main {
 						color: #fff;
 						transition: 0.3s;
 					}
-					.modal-box li.done-task span i.fa-check {
+					.modal-box li.done-memo span i.fa-check {
 						color: #30ce30;
 						background: #fff;
 					}
@@ -271,7 +271,7 @@ main {
 			}
 			header h2 > i:hover {
 				font-weight: bold;
-				color: rgb(25, 97, 39);
+				color: #ccc;
 			}
 			header h2 p {
 				font-size: 10pt;
