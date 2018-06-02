@@ -65,13 +65,17 @@ const save_memo = () => {
 			res[year][month][date].push(memo);
 		}
 		chrome.storage.local.set(res, () => {
-			const ul = document.querySelector("ul");
-			const li = gen_memobox(memo);
-			ul.appendChild(li);
+			if (chrome.runtime.lastError === undefined) {
+				const ul = document.querySelector("ul");
+				const li = gen_memobox(memo);
+				ul.appendChild(li);
 
-			onclk_hashtags();
-			coloring();
-			t_box.value = "";
+				onclk_hashtags();
+				coloring();
+				t_box.value = "";
+			} else if (chrome.runtime.lastError["message"] === "QUOTA_BYTES quota exceeded") {
+				alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+			}
 		});
 	});
 };
@@ -159,14 +163,16 @@ const onclk_edit = (edit) => {
                     res[year][month][date].forEach((memo, idx) => {
                         if (memo.id === target) {
                             res[year][month][date][idx].body = after;
-							console.log("edited");
                         }
                     });
                     chrome.storage.local.set(res, () => {
-						console.log(res[year][month][date]);
-						li.innerHTML = after;
-						add_acts(li);
-						onclk_hashtags();
+						if (chrome.runtime.lastError === undefined) {
+							li.innerHTML = after;
+							add_acts(li);
+							onclk_hashtags();
+						} else if (chrome.runtime.lastError["message"] === "QUOTA_BYTES quota exceeded") {
+							alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+						}
                     });
                 });
             }
