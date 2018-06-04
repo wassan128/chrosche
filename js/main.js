@@ -4,6 +4,9 @@
 const MEMO_ID_PREFIX = "m_";
 
 /* utils */
+Element.prototype.prependChild = function (el) {
+	this.insertBefore(el, this.firstChild);
+}
 const get_ym = () => {
     const year = document.getElementById("cal-year").innerText;
     const month = document.getElementById("cal-month").innerText;
@@ -29,7 +32,7 @@ const load_memos = (date) => {
 
         for (const memo of res[year][month][date]) {
             const li = gen_memobox(memo);
-            ul.appendChild(li);
+            ul.prependChild(li);
         }
 		onclk_hashtags();
     });
@@ -68,7 +71,7 @@ const save_memo = () => {
 			if (chrome.runtime.lastError === undefined) {
 				const ul = document.querySelector("ul");
 				const li = gen_memobox(memo);
-				ul.appendChild(li);
+				ul.prependChild(li);
 
 				onclk_hashtags();
 				coloring();
@@ -225,7 +228,7 @@ const onclk_hashtags = () => {
 						span.innerText = `${month}/${date}`;
 						
 						li.appendChild(span);
-						ul.appendChild(li);
+						ul.prependChild(li);
 					}
 
 				}
