@@ -23,7 +23,7 @@ const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 const load_memos = (date) => {
     const [year, month] = get_ym();
     document.getElementById("cal-date").innerText = date;
-    chrome.storage.local.get(year, (res) => {
+    chrome.storage.sync.get(year, (res) => {
         const ul = document.querySelector("ul");
         ul.innerHTML = "";
         if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined" || typeof(res[year][month][date]) === "undefined") {
@@ -55,7 +55,7 @@ const save_memo = () => {
 
 	const [year, month] = get_ym();
 	const date = document.getElementById("cal-date").innerText;
-	chrome.storage.local.get(year, (res) => {
+	chrome.storage.sync.get(year, (res) => {
 		if (typeof(res[year]) === "undefined") {
 			res[year] = {};
 		}
@@ -67,7 +67,7 @@ const save_memo = () => {
 		} else {
 			res[year][month][date].push(memo);
 		}
-		chrome.storage.local.set(res, () => {
+		chrome.storage.sync.set(res, () => {
 			if (chrome.runtime.lastError === undefined) {
 				const ul = document.querySelector("ul");
 				const li = gen_memobox(memo);
@@ -92,7 +92,7 @@ const coloring = () => {
         "rgba(25, 97, 39, 0.9)"
     ];
     const [year, month] = get_ym();
-    chrome.storage.local.get(year, (res) => {
+    chrome.storage.sync.get(year, (res) => {
         if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined") {
             return;
         }
@@ -125,13 +125,13 @@ const onclk_done = (done) => {
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
 		const target = get_id(li.id);
-        chrome.storage.local.get(year, (res) => {
+        chrome.storage.sync.get(year, (res) => {
             res[year][month][date].forEach((memo, idx) => {
                 if (memo.id === target) {
 					res[year][month][date][idx].is_done = !(memo.is_done);
 				}
             });
-            chrome.storage.local.set(res, () => {
+            chrome.storage.sync.set(res, () => {
                 if (li.getAttribute("class") === "done-memo") {
                     li.removeAttribute("class", "done-memo");
                 } else {
@@ -162,13 +162,13 @@ const onclk_edit = (edit) => {
 					// TODO: warning dialog
                     return;
                 }
-                chrome.storage.local.get(year, (res) => {
+                chrome.storage.sync.get(year, (res) => {
                     res[year][month][date].forEach((memo, idx) => {
                         if (memo.id === target) {
                             res[year][month][date][idx].body = after;
                         }
                     });
-                    chrome.storage.local.set(res, () => {
+                    chrome.storage.sync.set(res, () => {
 						if (chrome.runtime.lastError === undefined) {
 							li.innerHTML = after;
 							add_acts(li);
@@ -193,9 +193,9 @@ const onclk_del = (del) => {
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
         const target = get_id(li.id);
-        chrome.storage.local.get(year, (res) => {
+        chrome.storage.sync.get(year, (res) => {
 			res[year][month][date] = res[year][month][date].filter(x => x.id !== target);
-            chrome.storage.local.set(res, () => {
+            chrome.storage.sync.set(res, () => {
                 li.parentNode.removeChild(li);
                 coloring();
             });
@@ -217,7 +217,7 @@ const onclk_hashtags = () => {
 		const [year, month] = get_ym();
 		const ul = document.querySelector("ul");
 		ul.innerHTML = "";
-		chrome.storage.local.get(year, (res) => {
+		chrome.storage.sync.get(year, (res) => {
 			for (const date in res[year][month]) {
 				for (const memo of res[year][month][date]) {
 					if (memo.body.match(ptn)) {
