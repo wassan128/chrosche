@@ -222,12 +222,6 @@ const onclk_hashtags = () => {
 				for (const memo of res[year][month][date]) {
 					if (memo.body.match(ptn)) {
 						const li = gen_memobox(memo);
-
-						const span = document.createElement("span");
-						span.setAttribute("class", "tag-date");
-						span.innerText = `${month}/${date}`;
-						
-						li.appendChild(span);
 						ul.prependChild(li);
 					}
 
