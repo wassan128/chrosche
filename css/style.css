@@ -11,7 +11,7 @@
 	height: 10px;
 }
 *::-webkit-scrollbar-track {
-	background: #EEE;
+	background: #eee;
 	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
 }
@@ -19,7 +19,7 @@
 	background: rgb(35, 154, 59);
 	border-radius: 10px;
 }
-.clearfix:after {
+.clearfix::after {
 	display: block;
 	content: " ";
 	clear: both;
@@ -101,7 +101,7 @@ main {
 		}
 		
 		.modal-box h3 {
-			border-bottom: 1px solid #DDD;
+			border-bottom: 1px solid #ddd;
 			margin-bottom: 0.5em;
 			user-select: none;
 		}
@@ -137,7 +137,7 @@ main {
 			margin: 1em 0;
 			list-style: none;
 			overflow: auto;
-			max-height: 20em;
+			max-height: 21em;
 		}
 			.modal-box li {
 				background: #fff;
@@ -215,6 +215,21 @@ main {
 					font-size: 9pt;
 					outline: none;
 				}
+		.modal-box ul.on-tags {
+			max-height: 24em;
+		}
+			.modal-box ul p.hash-date {
+				text-indent: 0.5em;
+				border-bottom: 1px solid #ccc;
+				background: #ddd;
+				color: #777;
+				margin-top: 0.5em;
+				padding: 0.5em 0.3em;
+				font-size: 12pt;
+			}
+			.modal-box ul p.hash-date:first-child {
+				margin-top: 0;
+			}
 	form {
 		font-size: 0;
 	}
@@ -229,10 +244,7 @@ main {
 			width: 60%;
 			padding: 1em;
 		}
-		form *:focus {
-			/*box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);*/
-		}
-		button.btn-save, button.btn-search {
+		button.btn-save {
 			width: 35px;
 			border: none;
 			padding: 1em;
@@ -244,11 +256,8 @@ main {
 		button.btn-save {
 			background: #239a3b;
 		}
-		button.btn-search {
-			background: #196127;
-		}
-		button.btn-save:hover, button.btn-save:focus, button.btn-search:hover, button.btn-search:focus {
-			width: 60px;
+		button.btn-save:hover, button.btn-save:focus {
+			opacity: 0.8;
 		}
 	header {
 		position: fixed;

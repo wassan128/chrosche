@@ -193,6 +193,7 @@ const onclk_del = (del) => {
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
         const target = get_id(li.id);
+		console.log(target)
         chrome.storage.sync.get(year, (res) => {
 			res[year][month][date] = res[year][month][date].filter(x => x.id !== target);
             chrome.storage.sync.set(res, () => {
@@ -209,22 +210,33 @@ const onclk_hashtags = () => {
     const fn_btn_hashtag = (e) => {
 		const target = e.target.innerText;
 		const ptn = new RegExp(`${target}</a>`);
-		document.getElementById("cal-tag").innerText = target;
+		
+		const [year, month] = get_ym();
+		document.getElementById("cal-tag").innerText = `${target} (${month}月)`;
 		document.querySelector("#memo-form").style.display = "none";
 		document.querySelector("#tb-normal").style.display = "none";
 		document.querySelector("#tb-hashtag").style.display = "block";
 
-		const [year, month] = get_ym();
 		const ul = document.querySelector("ul");
 		ul.innerHTML = "";
+		ul.setAttribute("class", "on-tags");
+		let cur = "";
 		chrome.storage.sync.get(year, (res) => {
 			for (const date in res[year][month]) {
 				for (const memo of res[year][month][date]) {
 					if (memo.body.match(ptn)) {
-						const li = gen_memobox(memo);
-						ul.prependChild(li);
-					}
+						if (cur !== `${year}${month}${date}`) {
+							cur = `${year}${month}${date}`;
 
+							const p = document.createElement("p");
+							p.innerText = `${year}/${month}/${date}`;
+							p.setAttribute("class", "hash-date");
+
+							ul.appendChild(p);
+						}
+						const li = gen_memobox(memo);
+						ul.appendChild(li);
+					}
 				}
 			}
 		});
@@ -361,6 +373,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.querySelector("#memo-form").style.display = "block";
 		document.querySelector("#tb-hashtag").style.display = "none";
 		document.querySelector("#tb-normal").style.display = "block";
+		document.querySelector("ul").removeAttribute("class", "on-tags");
 	};
     btn_prev_t.addEventListener("click", fn_btn_prev_t, false);
 
