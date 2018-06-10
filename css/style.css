@@ -341,12 +341,8 @@ footer {
 }
 	footer p {
 		text-align: center;
-		padding: 1em;
-		color: #666;
+		padding: 0.5em;
 	}
-	footer img {
-		position: fixed;
-		bottom: 1em;
-		left: 1em;
-		width: 200px;
-	}
+		footer p img {
+			width: 200px;
+		}

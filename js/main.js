@@ -193,7 +193,6 @@ const onclk_del = (del) => {
         const [year, month] = get_ym();
         const date = document.getElementById("cal-date").innerText;
         const target = get_id(li.id);
-		console.log(target)
         chrome.storage.sync.get(year, (res) => {
 			res[year][month][date] = res[year][month][date].filter(x => x.id !== target);
             chrome.storage.sync.set(res, () => {
