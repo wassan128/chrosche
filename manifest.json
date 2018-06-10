@@ -1,7 +1,7 @@
 {
 	"name": "chrosche",
 	"description": "「新しいタブ」ページでスケジュールやメモを管理できる拡張機能です。",
-	"version": "1.1",
+	"version": "1.2",
 	"manifest_version": 2,
 	"chrome_url_overrides": {
 		"newtab": "index.html"
