@@ -326,7 +326,39 @@ class Calendar {
     }
 }
 
+const load_bg = () => {
+	chrome.storage.local.get("bg", (res) => {
+		const bg = (res["bg"]) ? `url(${res["bg"]})` : "url('image/bg.jpg')";
+		document.body.style.backgroundImage = bg;
+	});
+};
+const save_bg = () => {
+	const reader = new FileReader();
+	const btn_bg = document.querySelector("#menu input[type=file]");
+	const fn_btn_bg = (e) => {
+		const file = e.target.files[0];
+		reader.readAsDataURL(file);
+	};
+	btn_bg.addEventListener("change", fn_btn_bg, false);
+	const fn_reader = () => {
+		const img = {"bg": reader.result};
+		chrome.storage.local.set(img, () => {
+			document.body.style.backgroundImage = `url(${img["bg"]})`;
+		});
+	};
+	reader.addEventListener("load", fn_reader, false);
+};
+const del_bg = () => {
+	chrome.storage.local.set({"bg": ""}, () => {
+		load_bg();
+		console.log("hoge")
+	});
+};
+
 document.addEventListener("DOMContentLoaded", () => {
+	load_bg();
+	save_bg();
+
     const cal = new Calendar();
     cal.draw();
     coloring();
@@ -391,5 +423,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		save_memo();
     };
     btn_save.addEventListener("click", fn_btn_save, false);
+
+	const btn_bg_del = document.querySelector("#btn-bg-del");
+	const fn_btn_bg_del = (e) => {
+		del_bg();
+	};
+	btn_bg_del.addEventListener("click", fn_btn_bg_del, false);
 });
 
