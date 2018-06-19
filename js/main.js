@@ -248,10 +248,13 @@ const onclk_hashtags = () => {
 const add_acts = (li) => {
     const act = document.createElement("span");
     const a_done = document.createElement("i");
+	a_done.setAttribute("title", "済/未");
     a_done.setAttribute("class", "fa fa-check");
     const a_edit = document.createElement("i");
+	a_edit.setAttribute("title", "編集");
     a_edit.setAttribute("class", "fa fa-pencil");
     const a_del = document.createElement("i");
+	a_del.setAttribute("title", "削除");
     a_del.setAttribute("class", "fa fa-trash-o");
 	
     onclk_done(a_done);
@@ -337,7 +340,11 @@ const save_bg = () => {
 	const btn_bg = document.querySelector("#menu input[type=file]");
 	const fn_btn_bg = (e) => {
 		const file = e.target.files[0];
-		reader.readAsDataURL(file);
+		if (file.type.substr(0, 5) === "image") {
+			reader.readAsDataURL(file);
+		} else {
+			alert("画像を指定してください");
+		}
 	};
 	btn_bg.addEventListener("change", fn_btn_bg, false);
 	const fn_reader = () => {

@@ -91,13 +91,14 @@ main {
 			font-weight: bold;
 			cursor: pointer;
 		}
-		.modal-close i {
-			color: #333;
-			transition: 0.5s;
-		}
-		.modal-close i:hover {
-			color: #666;
-		}
+			.modal-close i {
+				color: #333;
+				font-size: 11pt;
+				transition: 0.5s;
+			}
+			.modal-close i:hover {
+				color: #666;
+			}
 		
 		.modal-box h3 {
 			border-bottom: 1px solid #ddd;
@@ -241,11 +242,14 @@ main {
 		}
 		form#memo-form input {
 			width: 60%;
+			border-radius: 20px;
 			padding: 1em;
+			transition: 0.3s;
 		}
 		button.btn-save {
 			width: 35px;
 			border: none;
+			margin-left: 0.5em;
 			padding: 1em;
 			color: #fff;
 			outline: none;
@@ -254,22 +258,85 @@ main {
 		}
 		button.btn-save {
 			background: #239a3b;
+			border-radius: 50%;
 		}
-		button.btn-save:hover, button.btn-save:focus {
-			opacity: 0.8;
+		form#memo-form input:hover, form#memo-form input:focus,
+		.btn-save:hover, .btn-save:active {
+			border-radius: 3px;
+			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
 #menu {
 	width: 250px;
+	padding: 1em;
 	position: fixed;
 	top: 44pt;
 	right: 0;
-	padding: 1em;
 	background: rgba(255, 255, 255, 0.8);
 	box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.4);
 }
-	#menu form input {
-		font-size: 8pt;
+	#menu h2 {
+		font-size: 15pt;
+		color: #666;
 	}
+	#menu form > div {
+		background: rgba(255, 255, 255, 0.9);
+		margin: 1em 0;
+		box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3);
+	}
+		#menu form h3 {
+			font-size: 10pt;
+			padding: 0.5em;
+			border-bottom: 1px dashed #eee;
+		}
+	.btns-menu {
+		font-size: 8pt;
+		border: none;
+		color: #fff;
+		cursor: pointer;
+		display: block;
+		text-align: center;
+		width: 50%;
+		height: 3em;
+		line-height: 3em;
+		float: left;
+		transition: 0.5s;
+	}
+	.btns-menu:hover {
+		opacity: 0.8;
+	}
+	#btn-bg-lbl {
+		background: #239a3b;
+	}
+	#btn-bg-del {
+		background: #cf3d3d;
+	}
+	
+		#btn-bg {
+			display: none;
+		}
+	#btn-opacity {
+		-webkit-appearance: none;
+		background: #ccc;
+		width: 90%;
+		height: 2px;
+		outline: none;
+		margin: 1em 0 1em 5%;
+		cursor: pointer;
+	}
+	#btn-opacity::-webkit-slider-thumb {
+		-webkit-appearance: none;
+		border: 3px solid #22afd2;
+		background: #22afd2;
+		border-radius: 50%;
+		width: 20px;
+		height: 20px;
+		display: block;
+		transition: 0.3s;
+	}
+	#btn-opacity::-webkit-slider-thumb:hover, #btn-opacity::-webkit-slider-thumb:active {
+		border-radius: 3px;
+		box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+}
 
 	header {
 		position: fixed;

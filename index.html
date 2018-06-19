@@ -35,7 +35,7 @@
 				<form id="memo-form">
 					<input class="memo-text" type="text" placeholder="予定の内容を入力"/>
 					<input type="text" style="display: none"/>
-					<button type="button" class="btn-save">
+					<button type="button" class="btn-save" title="リストに追加">
 						<i class="fa fa-pencil"></i>
 					</button>
 				</form>
@@ -45,12 +45,24 @@
 			</div>
 		</div>
 		<div id="menu">
+			<h2>
+				<i class="fa fa-cogs"></i>カスタマイズ
+			</h2>
 			<form>
-				<h3>背景画像</h3>
-				<input type="file" accept="image/*"/>
-				<input type="button" value="背景画像を削除" id="btn-bg-del"/>
-				<h3>セルの透明度</h3>
-				<input type="range" min="0.0" max="1.0" step="0.1"/>
+				<div class="clearfix">
+					<h3>背景画像</h3>
+					<label for="btn-bg" id="btn-bg-lbl" class="btns-menu">
+						<i class="fa fa-image"></i>画像を選択
+						<input type="file" accept="image/*" id="btn-bg"/>
+					</label>
+					<button type="button" id="btn-bg-del" class="btns-menu">
+						<i class="fa fa-trash"></i>デフォルトに戻す
+					</button>
+				</div>
+				<div>
+					<h3>セルの透明度</h3>
+					<input type="range" min="0.0" max="1.0" step="0.1" id="btn-opacity"/>
+				</div>
 			</form>
 		</div>
 		<header class="clearfix">
