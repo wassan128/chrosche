@@ -273,6 +273,8 @@ main {
 	right: 0;
 	background: rgba(255, 255, 255, 0.8);
 	box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.4);
+	transition: 0.5s;
+	right: -300px;
 }
 	#menu h2 {
 		font-size: 15pt;
@@ -392,7 +394,11 @@ main {
 			position: absolute;
 			top: 0;
 			right: 0;
+			transition: 0.5s;
 		}
+			#btn-menu-close {
+				display: none;
+			}
 	table {
 		border-collapse: separate;
 		border-spacing: 0.5em;

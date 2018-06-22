@@ -330,14 +330,14 @@ class Calendar {
 }
 
 const load_bg = () => {
-	chrome.storage.local.get("bg", (res) => {
-		const bg = (res["bg"]) ? `url(${res["bg"]})` : "url('image/bg.jpg')";
+	chrome.storage.local.get("conf_bg", (res) => {
+		const bg = (res["conf_bg"]) ? `url(${res["conf_bg"]})` : "url('image/bg.jpg')";
 		document.body.style.backgroundImage = bg;
 	});
 };
 const save_bg = () => {
 	const reader = new FileReader();
-	const btn_bg = document.querySelector("#menu input[type=file]");
+	const btn_bg = document.querySelector("#btn-bg");
 	const fn_btn_bg = (e) => {
 		const file = e.target.files[0];
 		if (file.type.substr(0, 5) === "image") {
@@ -348,23 +348,26 @@ const save_bg = () => {
 	};
 	btn_bg.addEventListener("change", fn_btn_bg, false);
 	const fn_reader = () => {
-		const img = {"bg": reader.result};
+		const img = {"conf_bg": reader.result};
 		chrome.storage.local.set(img, () => {
-			document.body.style.backgroundImage = `url(${img["bg"]})`;
+			document.body.style.backgroundImage = `url(${img["conf_bg"]})`;
 		});
 	};
 	reader.addEventListener("load", fn_reader, false);
 };
 const del_bg = () => {
-	chrome.storage.local.set({"bg": ""}, () => {
+	chrome.storage.local.set({"conf_bg": ""}, () => {
 		load_bg();
-		console.log("hoge")
 	});
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+const fire_config = () => {
 	load_bg();
 	save_bg();
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+	fire_config();
 
     const cal = new Calendar();
     cal.draw();
@@ -433,8 +436,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const btn_bg_del = document.querySelector("#btn-bg-del");
 	const fn_btn_bg_del = (e) => {
-		del_bg();
+        if (confirm(`背景画像をデフォルトに戻しますか?`)) {
+			del_bg();
+		}
 	};
 	btn_bg_del.addEventListener("click", fn_btn_bg_del, false);
+
+	const btn_menu_open = document.querySelector("#btn-menu-open");
+	const fn_btn_menu_open = (e) => {
+		document.querySelector("#menu").style.right = "0px";
+		document.querySelector("#btn-menu-open").style.display = "none";
+		document.querySelector("#btn-menu-close").style.display = "block";
+	};
+	btn_menu_open.addEventListener("click", fn_btn_menu_open, false);
+
+	const btn_menu_close = document.querySelector("#btn-menu-close");
+	const fn_btn_menu_close = (e) => {
+		document.querySelector("#menu").style.right = "-300px";
+		document.querySelector("#btn-menu-open").style.display = "block";
+		document.querySelector("#btn-menu-close").style.display = "none";
+	};
+	btn_menu_close.addEventListener("click", fn_btn_menu_close, false);
 });
 

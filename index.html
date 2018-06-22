@@ -59,25 +59,22 @@
 						<i class="fa fa-trash"></i>デフォルトに戻す
 					</button>
 				</div>
-				<div>
-					<h3>セルの透明度</h3>
-					<input type="range" min="0.0" max="1.0" step="0.1" id="btn-opacity"/>
-				</div>
 			</form>
 		</div>
 		<header class="clearfix">
 			<div id="cal-ctrl">
 				<h2>
-					<i class="fa fa-angle-left btn-prev-month"></i>
+					<i class="fa fa-angle-left btn-prev-month" title="先月"></i>
 					<span id="cal-year">NaN</span>
 					<span>/</span>
 					<span id="cal-month">NaN</span>
-					<i class="fa fa-angle-right btn-next-month"></i>
+					<i class="fa fa-angle-right btn-next-month" title="翌月"></i>
 				</h2>
 			</div>
 			<div id="cal-menu">
 				<h2>
-					<i class="fa fa-cogs"></i>
+					<i class="fa fa-cogs" id="btn-menu-open" title="メニューを開く"></i>
+					<i class="fa fa-close" id="btn-menu-close" title="メニューを閉じる"></i>
 				</h2>
 			</div>
 		</header>
