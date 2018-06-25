@@ -233,7 +233,7 @@ const onclk_hashtags = () => {
 
 							ul.appendChild(p);
 						}
-						const li = gen_memobox(memo);
+						const li = gen_memobox(memo, false);
 						ul.appendChild(li);
 					}
 				}
@@ -241,7 +241,7 @@ const onclk_hashtags = () => {
 		});
 	};
 	for (const btn_hashtag of btns_hashtag) {
-		btn_hashtag.addEventListener("click", fn_btn_hashtag, false);
+		btn_hashtag.onclick = fn_btn_hashtag;
 	}
 };
 
@@ -267,14 +267,16 @@ const add_acts = (li) => {
     li.appendChild(act);
 };
 
-const gen_memobox = (memo) => {
+const gen_memobox = (memo, is_need_acts=true) => {
     const box = document.createElement("li");
 	if (memo.is_done) {
         box.setAttribute("class", "done-memo");
 	}
 	box.innerHTML = memo.body;
 	box.setAttribute("id", `${MEMO_ID_PREFIX}${memo.id}`);
-	add_acts(box);
+	if (is_need_acts) {
+		add_acts(box);
+	}
     return box;
 };
 
