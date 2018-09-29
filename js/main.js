@@ -12,6 +12,9 @@ const get_ym = () => {
     const month = document.getElementById("cal-month").innerText;
     return [year, month];
 };
+const get_key = (year, month) => {
+	return `${year}_${month}`;
+};
 const sanitize = (text) => {
 	return text.replace("<", "&lt;")
 	.replace("'", "&quot;")
@@ -20,19 +23,21 @@ const sanitize = (text) => {
 const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 
 /* functions */
-const load_memos = (date) => {
+const load_memos = (d) => {
     const [year, month] = get_ym();
-    document.getElementById("cal-date").innerText = date;
-    chrome.storage.sync.get(year, (res) => {
+	const ym = get_key(year, month);
+
+    document.getElementById("cal-date").innerText = d;
+    chrome.storage.sync.get(ym, (res) => {
         const ul = document.querySelector("ul");
         ul.innerHTML = "";
-        if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined" || typeof(res[year][month][date]) === "undefined") {
+        if (typeof(res[ym]) === "undefined" || typeof(res[ym][d]) === "undefined") {
             return;
         }
 
-        for (const memo of res[year][month][date]) {
+        for (const memo of res[ym][d]) {
             const li = gen_memobox(memo);
-            ul.prependChild(li);
+			ul.prependChild(li);
         }
 		onclk_hashtags();
     });
@@ -44,6 +49,8 @@ const save_memo = () => {
 		alert("予定の内容を入力してください");
 		return;
 	}
+	const [year, month] = get_ym();
+	const ym = get_key(year, month);
 
 	const ts = moment().unix();
 	const body = sanitize(t_box.value);
@@ -53,19 +60,15 @@ const save_memo = () => {
 		"is_done": false
 	};
 
-	const [year, month] = get_ym();
-	const date = document.getElementById("cal-date").innerText;
-	chrome.storage.sync.get(year, (res) => {
-		if (typeof(res[year]) === "undefined") {
-			res[year] = {};
+	const d = document.getElementById("cal-date").innerText;
+	chrome.storage.sync.get(ym, (res) => {
+		if (typeof(res[ym]) === "undefined") {
+			res[ym] = {};
 		}
-		if (typeof(res[year][month]) === "undefined") {
-			res[year][month] = {};
-		}
-		if (typeof(res[year][month][date]) === "undefined") {
-			res[year][month][date] = [memo];
+		if (typeof(res[ym][d]) === "undefined") {
+			res[ym][d] = [memo];
 		} else {
-			res[year][month][date].push(memo);
+			res[ym][d].push(memo);
 		}
 		chrome.storage.sync.set(res, () => {
 			if (chrome.runtime.lastError === undefined) {
@@ -92,19 +95,20 @@ const coloring = () => {
         "rgba(25, 97, 39, 0.9)"
     ];
     const [year, month] = get_ym();
-    chrome.storage.sync.get(year, (res) => {
-        if (typeof(res[year]) === "undefined" || typeof(res[year][month]) === "undefined") {
+	const ym = get_key(year, month);
+    chrome.storage.sync.get(ym, (res) => {
+        if (typeof(res[ym]) === "undefined") {
             return;
         }
-        for (const date in res[year][month]) {
-            const len = res[year][month][date].length;
+        for (const d in res[ym]) {
+			const len = res[ym][d].length;
             const lv = (len > 4) ? 4 : len;
             if (lv >= 0) {
-                document.getElementById(`c${date}`).style.background = color[lv];
+                document.getElementById(`c${d}`).style.background = color[lv];
                 if (lv > 2) {
-                    document.getElementById(`c${date}`).style.color = "#fff";
+                    document.getElementById(`c${d}`).style.color = "#fff";
                 } else {
-                    document.getElementById(`c${date}`).style.color = "#333";
+                    document.getElementById(`c${d}`).style.color = "#333";
                 }
             }
         }
@@ -123,12 +127,13 @@ const onclk_done = (done) => {
     const fn_done = (e) => {
         const li = e.target.parentNode.parentNode;
         const [year, month] = get_ym();
-        const date = document.getElementById("cal-date").innerText;
+		const ym = get_key(year, month);
+        const d = document.getElementById("cal-date").innerText;
 		const target = get_id(li.id);
-        chrome.storage.sync.get(year, (res) => {
-            res[year][month][date].forEach((memo, idx) => {
+        chrome.storage.sync.get(ym, (res) => {
+            res[ym][d].forEach((memo, idx) => {
                 if (memo.id === target) {
-					res[year][month][date][idx].is_done = !(memo.is_done);
+					res[ym][d][idx].is_done = !(memo.is_done);
 				}
             });
             chrome.storage.sync.set(res, () => {
@@ -147,7 +152,8 @@ const onclk_edit = (edit) => {
     const fn_edit = (e) => {
         const li = e.target.parentNode.parentNode;
         const [year, month] = get_ym();
-        const date = document.getElementById("cal-date").innerText;
+		const ym = get_key(year, month);
+        const d = document.getElementById("cal-date").innerText;
 
         const input = document.createElement("input");
         const target = get_id(li.id);
@@ -162,10 +168,10 @@ const onclk_edit = (edit) => {
 					// TODO: warning dialog
                     return;
                 }
-                chrome.storage.sync.get(year, (res) => {
-                    res[year][month][date].forEach((memo, idx) => {
+                chrome.storage.sync.get(ym, (res) => {
+                    res[ym][d].forEach((memo, idx) => {
                         if (memo.id === target) {
-                            res[year][month][date][idx].body = after;
+                            res[ym][d][idx].body = after;
                         }
                     });
                     chrome.storage.sync.set(res, () => {
@@ -191,10 +197,11 @@ const onclk_del = (del) => {
             return;
         }
         const [year, month] = get_ym();
-        const date = document.getElementById("cal-date").innerText;
+		const ym = get_key(year, month);
+        const d = document.getElementById("cal-date").innerText;
         const target = get_id(li.id);
-        chrome.storage.sync.get(year, (res) => {
-			res[year][month][date] = res[year][month][date].filter(x => x.id !== target);
+        chrome.storage.sync.get(ym, (res) => {
+			res[ym][d] = res[ym][d].filter(x => x.id !== target);
             chrome.storage.sync.set(res, () => {
                 li.parentNode.removeChild(li);
                 coloring();
@@ -209,8 +216,9 @@ const onclk_hashtags = () => {
     const fn_btn_hashtag = (e) => {
 		const target = e.target.innerText;
 		const ptn = new RegExp(`${target}</a>`);
-		
+
 		const [year, month] = get_ym();
+		const ym = get_key(year, month);
 		document.getElementById("cal-tag").innerText = `${target} (${month}月)`;
 		document.querySelector("#memo-form").style.display = "none";
 		document.querySelector("#tb-normal").style.display = "none";
@@ -220,15 +228,15 @@ const onclk_hashtags = () => {
 		ul.innerHTML = "";
 		ul.setAttribute("class", "on-tags");
 		let cur = "";
-		chrome.storage.sync.get(year, (res) => {
-			for (const date in res[year][month]) {
-				for (const memo of res[year][month][date]) {
+		chrome.storage.sync.get(ym, (res) => {
+			for (const d in res[ym]) {
+				for (const memo of res[ym][d]) {
 					if (memo.body.match(ptn)) {
-						if (cur !== `${year}${month}${date}`) {
-							cur = `${year}${month}${date}`;
+						if (cur !== `${month}${d}`) {
+							cur = `${month}${d}`;
 
 							const p = document.createElement("p");
-							p.innerText = `${year}/${month}/${date}`;
+							p.innerText = `${month}/${d}`;
 							p.setAttribute("class", "hash-date");
 
 							ul.appendChild(p);
@@ -256,11 +264,11 @@ const add_acts = (li) => {
     const a_del = document.createElement("i");
 	a_del.setAttribute("title", "削除");
     a_del.setAttribute("class", "fa fa-trash-o");
-	
+
     onclk_done(a_done);
     onclk_edit(a_edit);
     onclk_del(a_del);
-	
+
     act.append(a_done);
     act.append(a_edit);
     act.append(a_del);
@@ -301,7 +309,7 @@ class Calendar {
 
         const st_day = this.cal.startOf("month").day();
         const ed_date = this.cal.endOf("month").date();
-		
+
         const tds = document.getElementsByTagName("td");
         let c = 0;
         for (const td of tds) {
@@ -382,7 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
         coloring();
     };
     btn_prev_m.addEventListener("click", fn_btn_prev_m, false);
-	
+
     const btn_next_m = document.querySelector(".btn-next-month");
     const fn_btn_next_m = (e) => {
         cal.next_month();
