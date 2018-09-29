@@ -21,6 +21,13 @@ const sanitize = (text) => {
 	.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 };
 const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
+const is_exceeded = () => {
+	if (chrome.runtime.lastError === undefined) {
+		return false;
+	} else if (chrome.runtime.lastError["message"]) {
+		return true;
+	}
+};
 
 /* functions */
 const load_memos = (d) => {
@@ -71,7 +78,9 @@ const save_memo = () => {
 			res[ym][d].push(memo);
 		}
 		chrome.storage.sync.set(res, () => {
-			if (chrome.runtime.lastError === undefined) {
+			if (is_exceeded()) {
+				alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+			} else {
 				const ul = document.querySelector("ul");
 				const li = gen_memobox(memo);
 				ul.prependChild(li);
@@ -79,9 +88,7 @@ const save_memo = () => {
 				onclk_hashtags();
 				coloring();
 				t_box.value = "";
-			} else if (chrome.runtime.lastError["message"] === "QUOTA_BYTES quota exceeded") {
-				alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
-			}
+}
 		});
 	});
 };
@@ -175,12 +182,12 @@ const onclk_edit = (edit) => {
                         }
                     });
                     chrome.storage.sync.set(res, () => {
-						if (chrome.runtime.lastError === undefined) {
+						if (is_exceeded()) {
+							alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+						} else {
 							li.innerHTML = after;
 							add_acts(li);
 							onclk_hashtags();
-						} else if (chrome.runtime.lastError["message"] === "QUOTA_BYTES quota exceeded") {
-							alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
 						}
                     });
                 });
