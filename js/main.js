@@ -93,19 +93,29 @@ const save_memo = () => {
 	});
 };
 
+const color = [
+	"rgba(238, 238, 238, 0.9)",
+	"rgba(198, 228, 139, 0.9)",
+	"rgba(123, 201, 111, 0.9)",
+	"rgba(35, 154, 59, 0.9)",
+	"rgba(25, 97, 39, 0.9)"
+];
+const reset_color = (d) => {
+	const td = document.getElementById(`c${d}`);
+	td.style.background = color[0];
+};
+const reset_color_all = () => {
+	const tds = document.querySelectorAll(".c-dates");
+	for (const td of tds) {
+		td.style.background = color[0];
+	}
+};
 const coloring = () => {
-    const color = [
-        "rgba(238, 238, 238, 0.9)",
-        "rgba(198, 228, 139, 0.9)",
-        "rgba(123, 201, 111, 0.9)",
-        "rgba(35, 154, 59, 0.9)",
-        "rgba(25, 97, 39, 0.9)"
-    ];
     const [year, month] = get_ym();
 	const ym = get_key(year, month);
     chrome.storage.sync.get(ym, (res) => {
         if (typeof(res[ym]) === "undefined") {
-            return;
+			return;
         }
         for (const d in res[ym]) {
 			const len = res[ym][d].length;
@@ -207,11 +217,22 @@ const onclk_del = (del) => {
 		const ym = get_key(year, month);
         const d = document.getElementById("cal-date").innerText;
         const target = get_id(li.id);
+
         chrome.storage.sync.get(ym, (res) => {
 			res[ym][d] = res[ym][d].filter(x => x.id !== target);
+
+			if (res[ym][d].length === 0) {
+				reset_color(d);
+				delete res[ym][d];
+			}
+			if (Object.keys(res[ym]).length === 0) {
+				reset_color_all();
+				delete res[ym];
+				chrome.storage.sync.remove(ym, () => {});
+			}
             chrome.storage.sync.set(res, () => {
+				coloring();
                 li.parentNode.removeChild(li);
-                coloring();
             });
         });
     };
@@ -308,9 +329,6 @@ class Calendar {
         this.month = this.cal.month() + 1;
     }
     draw() {
-        const fire_mark = document.createElement("i");
-        fire_mark.setAttribute("class", "fa fa-fire");
-
         document.getElementById("cal-year").innerText = this.year;
         document.getElementById("cal-month").innerText = this.month;
 
@@ -325,12 +343,14 @@ class Calendar {
                 td.style.color = "#333";
                 td.style.background = "rgba(249, 249, 249, 0.2)";
                 td.removeAttribute("id");
+                td.removeAttribute("class");
                 td.innerText = "";
                 td.removeEventListener("click", onclk_td, false);
                 continue;
             }
             td.innerText = date;
             td.setAttribute("id", `c${date}`);
+			td.setAttribute("class", "c-dates")
             td.style.color = "#333";
             td.style.background = "rgba(238, 238, 238, 0.9)";
             td.addEventListener("click", onclk_td, false);
