@@ -1,7 +1,7 @@
 "use strict";
 
 import * as storage from "./libstorage.js";
-import * as patch from "./patch-1-ds.js";
+import * as p_01 from "./p_01.js";
 
 /* constants */
 const MEMO_ID_PREFIX = "m_";
@@ -106,7 +106,6 @@ const reset_color_all = () => {
 	}
 };
 const coloring = async () => {
-	console.log("coloring")
     const [year, month] = get_ym();
 	const ym = get_key(year, month);
 
@@ -402,7 +401,7 @@ const fire_config = () => {
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-	await patch.p_01();
+	await p_01.p_01();
 
     const cal = new Calendar();
     cal.draw();
