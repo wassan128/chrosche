@@ -1,5 +1,8 @@
 "use strict";
 
+import * as storage from "./libstorage.js";
+import * as patch from "./patch-1-ds.js";
+
 /* constants */
 const MEMO_ID_PREFIX = "m_";
 
@@ -21,36 +24,29 @@ const sanitize = (text) => {
 	.replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 };
 const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
-const is_exceeded = () => {
-	if (chrome.runtime.lastError === undefined) {
-		return false;
-	} else if (chrome.runtime.lastError["message"]) {
-		return true;
-	}
-};
 
 /* functions */
-const load_memos = (d) => {
+const load_memos = async (d) => {
     const [year, month] = get_ym();
 	const ym = get_key(year, month);
 
     document.getElementById("cal-date").innerText = d;
-    chrome.storage.sync.get(ym, (res) => {
-        const ul = document.querySelector("ul");
-        ul.innerHTML = "";
-        if (typeof(res[ym]) === "undefined" || typeof(res[ym][d]) === "undefined") {
-            return;
-        }
 
-        for (const memo of res[ym][d]) {
-            const li = gen_memobox(memo);
-			ul.prependChild(li);
-        }
-		onclk_hashtags();
-    });
+	const res = await storage.get_sync_storage(ym);
+	const ul = document.querySelector("ul");
+	ul.innerHTML = "";
+	if (typeof(res[ym]) === "undefined" || typeof(res[ym][d]) === "undefined") {
+		return;
+	}
+
+	for (const memo of res[ym][d]) {
+		const li = gen_memobox(memo);
+		ul.prependChild(li);
+	}
+	onclk_hashtags();
 };
 
-const save_memo = () => {
+const save_memo = async () => {
 	const t_box = document.querySelector(".memo-text");
 	if (t_box.value === "") {
 		alert("予定の内容を入力してください");
@@ -68,29 +64,28 @@ const save_memo = () => {
 	};
 
 	const d = document.getElementById("cal-date").innerText;
-	chrome.storage.sync.get(ym, (res) => {
-		if (typeof(res[ym]) === "undefined") {
-			res[ym] = {};
-		}
-		if (typeof(res[ym][d]) === "undefined") {
-			res[ym][d] = [memo];
-		} else {
-			res[ym][d].push(memo);
-		}
-		chrome.storage.sync.set(res, () => {
-			if (is_exceeded()) {
-				alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
-			} else {
-				const ul = document.querySelector("ul");
-				const li = gen_memobox(memo);
-				ul.prependChild(li);
+	const res = await storage.get_sync_storage(ym);
+	if (typeof(res[ym]) === "undefined") {
+		res[ym] = {};
+	}
+	if (typeof(res[ym][d]) === "undefined") {
+		res[ym][d] = [memo];
+	} else {
+		res[ym][d].push(memo);
+	}
 
-				onclk_hashtags();
-				coloring();
-				t_box.value = "";
-}
-		});
-	});
+	const err = await storage.set_sync_storage(res);
+	if (err) {
+		alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+	} else {
+		const ul = document.querySelector("ul");
+		const li = gen_memobox(memo);
+		ul.prependChild(li);
+
+		onclk_hashtags();
+		coloring();
+		t_box.value = "";
+	}
 };
 
 const color = [
@@ -110,26 +105,27 @@ const reset_color_all = () => {
 		td.style.background = color[0];
 	}
 };
-const coloring = () => {
+const coloring = async () => {
+	console.log("coloring")
     const [year, month] = get_ym();
 	const ym = get_key(year, month);
-    chrome.storage.sync.get(ym, (res) => {
-        if (typeof(res[ym]) === "undefined") {
-			return;
-        }
-        for (const d in res[ym]) {
-			const len = res[ym][d].length;
-            const lv = (len > 4) ? 4 : len;
-            if (lv >= 0) {
-                document.getElementById(`c${d}`).style.background = color[lv];
-                if (lv > 2) {
-                    document.getElementById(`c${d}`).style.color = "#fff";
-                } else {
-                    document.getElementById(`c${d}`).style.color = "#333";
-                }
-            }
-        }
-    });
+
+	const res = await storage.get_sync_storage(ym);
+	if (typeof(res[ym]) === "undefined") {
+		return;
+	}
+	for (const d in res[ym]) {
+		const len = res[ym][d].length;
+		const lv = (len > 4) ? 4 : len;
+		if (lv >= 0) {
+			document.getElementById(`c${d}`).style.background = color[lv];
+			if (lv > 2) {
+				document.getElementById(`c${d}`).style.color = "#fff";
+			} else {
+				document.getElementById(`c${d}`).style.color = "#333";
+			}
+		}
+	}
 };
 
 const onclk_td = (e) => {
@@ -141,26 +137,28 @@ const onclk_td = (e) => {
 };
 
 const onclk_done = (done) => {
-    const fn_done = (e) => {
+    const fn_done = async (e) => {
         const li = e.target.parentNode.parentNode;
         const [year, month] = get_ym();
 		const ym = get_key(year, month);
         const d = document.getElementById("cal-date").innerText;
 		const target = get_id(li.id);
-        chrome.storage.sync.get(ym, (res) => {
-            res[ym][d].forEach((memo, idx) => {
-                if (memo.id === target) {
-					res[ym][d][idx].is_done = !(memo.is_done);
-				}
-            });
-            chrome.storage.sync.set(res, () => {
-                if (li.getAttribute("class") === "done-memo") {
-                    li.removeAttribute("class", "done-memo");
-                } else {
-                    li.setAttribute("class", "done-memo");
-                }
-            });
-        });
+
+		const res = await storage.get_sync_storage(ym);
+		res[ym][d].forEach((memo, idx) => {
+			if (memo.id === target) {
+				res[ym][d][idx].is_done = !(memo.is_done);
+			}
+		});
+
+		const err = await storage.set_sync_storage(res);
+		if (!err) {
+			if (li.getAttribute("class") === "done-memo") {
+				li.removeAttribute("class", "done-memo");
+			} else {
+				li.setAttribute("class", "done-memo");
+			}
+		}
     };
     done.addEventListener("click", fn_done, false);
 };
@@ -178,29 +176,28 @@ const onclk_edit = (edit) => {
         input.setAttribute("class", "edit-box");
         li.innerText = "";
         li.appendChild(input);
-        input.addEventListener("keyup", (e) => {
+        input.addEventListener("keyup", async (e) => {
             if (e.keyCode === 13) {
                 const after = sanitize(input.value);
                 if (after === "") {
 					// TODO: warning dialog
                     return;
                 }
-                chrome.storage.sync.get(ym, (res) => {
-                    res[ym][d].forEach((memo, idx) => {
-                        if (memo.id === target) {
-                            res[ym][d][idx].body = after;
-                        }
-                    });
-                    chrome.storage.sync.set(res, () => {
-						if (is_exceeded()) {
-							alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
-						} else {
-							li.innerHTML = after;
-							add_acts(li);
-							onclk_hashtags();
-						}
-                    });
-                });
+				const res = await storage.get_sync_storage(ym);
+				res[ym][d].forEach((memo, idx) => {
+					if (memo.id === target) {
+						res[ym][d][idx].body = after;
+					}
+				});
+
+				const err = await storage.set_sync_storage(res);
+				if (err) {
+					alert("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+				} else {
+					li.innerHTML = after;
+					add_acts(li);
+					onclk_hashtags();
+				}
             }
         });
     };
@@ -208,7 +205,7 @@ const onclk_edit = (edit) => {
 };
 
 const onclk_del = (del) => {
-    const fn_del = (e) => {
+    const fn_del = async (e) => {
         const li = e.target.parentNode.parentNode;
         if (!confirm(`「${li.innerText}」を削除しますか?`)) {
             return;
@@ -218,30 +215,31 @@ const onclk_del = (del) => {
         const d = document.getElementById("cal-date").innerText;
         const target = get_id(li.id);
 
-        chrome.storage.sync.get(ym, (res) => {
-			res[ym][d] = res[ym][d].filter(x => x.id !== target);
+		const res = await storage.get_sync_storage(ym)
+		res[ym][d] = res[ym][d].filter(x => x.id !== target);
 
-			if (res[ym][d].length === 0) {
-				reset_color(d);
-				delete res[ym][d];
-			}
-			if (Object.keys(res[ym]).length === 0) {
-				reset_color_all();
-				delete res[ym];
-				chrome.storage.sync.remove(ym, () => {});
-			}
-            chrome.storage.sync.set(res, () => {
-				coloring();
-                li.parentNode.removeChild(li);
-            });
-        });
+		if (res[ym][d].length === 0) {
+			reset_color(d);
+			delete res[ym][d];
+		}
+		if (Object.keys(res[ym]).length === 0) {
+			reset_color_all();
+			delete res[ym];
+			await storage.remove_sync_storage(ym);
+		}
+
+		const err = await storage.set_sync_storage(res);
+		if (!err) {
+			coloring();
+			li.parentNode.removeChild(li);
+		}
     };
     del.addEventListener("click", fn_del, false);
 };
 
 const onclk_hashtags = () => {
 	const btns_hashtag = document.getElementsByClassName("hashtags");
-    const fn_btn_hashtag = (e) => {
+    const fn_btn_hashtag = async (e) => {
 		const target = e.target.innerText;
 		const ptn = new RegExp(`${target}</a>`);
 
@@ -256,25 +254,25 @@ const onclk_hashtags = () => {
 		ul.innerHTML = "";
 		ul.setAttribute("class", "on-tags");
 		let cur = "";
-		chrome.storage.sync.get(ym, (res) => {
-			for (const d in res[ym]) {
-				for (const memo of res[ym][d]) {
-					if (memo.body.match(ptn)) {
-						if (cur !== `${month}${d}`) {
-							cur = `${month}${d}`;
 
-							const p = document.createElement("p");
-							p.innerText = `${month}/${d}`;
-							p.setAttribute("class", "hash-date");
+		const res = await storage.get_sync_storage(ym);
+		for (const d in res[ym]) {
+			for (const memo of res[ym][d]) {
+				if (memo.body.match(ptn)) {
+					if (cur !== `${month}${d}`) {
+						cur = `${month}${d}`;
 
-							ul.appendChild(p);
-						}
-						const li = gen_memobox(memo, false);
-						ul.appendChild(li);
+						const p = document.createElement("p");
+						p.innerText = `${month}/${d}`;
+						p.setAttribute("class", "hash-date");
+
+						ul.appendChild(p);
 					}
+					const li = gen_memobox(memo, false);
+					ul.appendChild(li);
 				}
 			}
-		});
+		}
 	};
 	for (const btn_hashtag of btns_hashtag) {
 		btn_hashtag.onclick = fn_btn_hashtag;
@@ -403,12 +401,14 @@ const fire_config = () => {
 	save_bg();
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-	fire_config();
+document.addEventListener("DOMContentLoaded", async () => {
+	await patch.p_01();
 
     const cal = new Calendar();
     cal.draw();
-    coloring();
+    await coloring();
+
+	fire_config();
 
     const btn_prev_m = document.querySelector(".btn-prev-month");
     const fn_btn_prev_m = (e) => {
