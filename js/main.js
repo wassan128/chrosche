@@ -30,7 +30,7 @@ const load_memos = async (d) => {
     const [year, month] = get_ym();
 	const ym = get_key(year, month);
 
-    document.getElementById("cal-date").innerText = d.replace(/\s/g, "");
+    document.getElementById("cal-date").innerText = String(d).replace(/\s/g, "");
 
 	const res = await storage.get_sync_storage(ym);
 	const ul = document.querySelector("ul");
