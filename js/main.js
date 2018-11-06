@@ -29,8 +29,9 @@ const get_id = id_str => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 const load_memos = async (d) => {
     const [year, month] = get_ym();
 	const ym = get_key(year, month);
+	d = String(d).replace(/\s/g, "");
 
-    document.getElementById("cal-date").innerText = String(d).replace(/\s/g, "");
+    document.getElementById("cal-date").innerText = d;
 
 	const res = await storage.get_sync_storage(ym);
 	const ul = document.querySelector("ul");
