@@ -15,5 +15,8 @@ chrosche(Chrome + schedule)はGoogle Chromeの拡張機能で、「新しいタ�
 * 2018/6/5	ver1.1: UIの調整
 * 2018/3	ver1.0: 初期リリース
 
-## ライセンス
+## License
 MIT
+
+## Author
+wassan128
