@@ -83,7 +83,7 @@ main {
 		width: 50%;
 		height: 60%;
 	}
-		p.modal-control { 
+		p.modal-control {
 			float: right;
 		}
 		.modal-close {
@@ -99,7 +99,7 @@ main {
 			.modal-close i:hover {
 				color: #666;
 			}
-		
+
 		.modal-box h3 {
 			border-bottom: 1px solid #ddd;
 			margin-bottom: 0.5em;
@@ -125,7 +125,7 @@ main {
 				font-size: 30pt;
 				margin-right: 5px;
 			}
-		
+
 		#tb-hashtag {
 			animation-duration: 0.7s;
 			animation-name: switch-dsp;
@@ -312,7 +312,7 @@ main {
 	#btn-bg-del {
 		background: #cf3d3d;
 	}
-	
+
 		#btn-bg {
 			display: none;
 		}
