@@ -265,6 +265,18 @@ main {
 			border-radius: 3px;
 			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
+#warning-window {
+	width: 400px;
+    margin: auto;
+	padding: 1em;
+	position: fixed;
+    top: 50pt;
+    right: 0;
+    left: 0;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.4);
+	transition: 0.5s;
+}
 #menu {
 	width: 250px;
 	padding: 1em;

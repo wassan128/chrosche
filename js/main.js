@@ -20,6 +20,9 @@ const sanitize = (text) => text.replace("<", "&lt;")
     .replace("'", "&quot;")
     .replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
+const warning_window = () => {
+    //stab
+};
 
 /* functions */
 const load_memos = async (d) => {
