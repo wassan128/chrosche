@@ -265,7 +265,7 @@ main {
 			border-radius: 3px;
 			box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 		}
-#warning-window {
+#warning-window, #confirm-window {
 	width: 400px;
     margin: auto;
 	padding: 1em;
