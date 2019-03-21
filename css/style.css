@@ -270,12 +270,13 @@ main {
     margin: auto;
     padding: 1em;
     position: fixed;
-    top: 50pt;
+    top: -120px;
     right: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.8);
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.4);
     transition: 0.5s;
+    z-index: 999;
 }
 #menu {
     width: 250px;
