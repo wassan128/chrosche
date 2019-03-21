@@ -21,9 +21,12 @@ const sanitize = (text) => text.replace("<", "&lt;")
     .replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 const warning_window = (msg) => {
-    alert(msg);
+    const win = document.querySelector("#warning-window");
+    win.style.top = "65px";
 };
 const confirm_window = (msg, ok_fn) => {
+    const win = document.querySelector("#confirm-window");
+    win.style.top = "65px";
     if (!confirm(msg)) {
         ok_fn();
     }
