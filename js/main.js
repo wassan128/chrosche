@@ -20,16 +20,13 @@ const sanitize = (text) => text.replace("<", "&lt;")
     .replace("'", "&quot;")
     .replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
-const warning_window = (msg) => {
+const draw_warning_window = (msg) => {
     const win = document.querySelector("#warning-window");
     win.style.top = "65px";
 };
-const confirm_window = (msg, ok_fn) => {
+const draw_confirm_window = (msg, ok_fn) => {
     const win = document.querySelector("#confirm-window");
     win.style.top = "65px";
-    if (!confirm(msg)) {
-        ok_fn();
-    }
 };
 
 /* functions */
@@ -57,7 +54,7 @@ const load_memos = async (d) => {
 const save_memo = async () => {
     const t_box = document.querySelector(".memo-text");
     if (t_box.value === "") {
-        warning_window("予定の内容を入力してください");
+        draw_warning_window("予定の内容を入力してください");
         return;
     }
     const [year, month] = get_ym();
@@ -84,7 +81,7 @@ const save_memo = async () => {
 
     const err = await storage.set_sync_storage(res);
     if (err) {
-        warning_window("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+        draw_warning_window("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
     } else {
         const ul = document.querySelector("ul");
         const li = gen_memobox(memo);
@@ -199,7 +196,7 @@ const onclk_edit = (edit) => {
 
                 const err = await storage.set_sync_storage(res);
                 if (err) {
-                    warning_window("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
+                    draw_warning_window("登録できるメモの上限サイズを超えています。古いメモを削除してください。");
                 } else {
                     li.innerHTML = after;
                     add_acts(li);
@@ -214,7 +211,7 @@ const onclk_edit = (edit) => {
 const onclk_del = (del) => {
     const fn_del = async (e) => {
         const li = e.target.parentNode.parentNode;
-        confirm_window(`「${li.innerText}」を削除しますか?`, () => {return;});
+        draw_confirm_window(`「${li.innerText}」を削除しますか?`, () => {return;});
         const [year, month] = get_ym();
         const ym = get_key(year, month);
         const d = document.getElementById("cal-date").innerText;
@@ -383,7 +380,7 @@ const save_bg = () => {
         if (file.type.substr(0, 5) === "image") {
             reader.readAsDataURL(file);
         } else {
-            warning_window("画像を指定してください");
+            draw_warning_window("画像を指定してください");
         }
     };
     btn_bg.addEventListener("change", fn_btn_bg, false);
@@ -478,7 +475,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btn_bg_del = document.querySelector("#btn-bg-del");
     const fn_btn_bg_del = () => {
-        confirm_window(`背景画像をデフォルトに戻しますか?`, del_bg());
+        draw_confirm_window(`背景画像をデフォルトに戻しますか?`, del_bg());
     };
     btn_bg_del.addEventListener("click", fn_btn_bg_del, false);
 
