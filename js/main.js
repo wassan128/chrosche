@@ -494,5 +494,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#btn-menu-close").style.display = "none";
     };
     btn_menu_close.addEventListener("click", fn_btn_menu_close, false);
+
+    const btn_warn_ok = document.querySelector("#btn-warn-ok");
+    const fn_btn_warn_ok = () => {
+        const win = document.querySelector("#warning-window");
+        win.style.top = "-120px";
+    };
+    btn_warn_ok.addEventListener("click", fn_btn_warn_ok, false);
+
+    const btn_conf_ok = document.querySelector("#btn-conf-ok");
+    const fn_btn_conf_ok = () => {
+        const win = document.querySelector("#confirm-window");
+        win.style.top = "-120px";
+    };
+    btn_conf_ok.addEventListener("click", fn_btn_conf_ok, false);
 });
 
