@@ -23,6 +23,7 @@ const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 const draw_warning_window = (msg) => {
     const win = document.querySelector("#warning-window");
     win.style.top = "65px";
+    win.children[1].textContent = msg;
 };
 const draw_confirm_window = (msg, ok_fn) => {
     const win = document.querySelector("#confirm-window");
