@@ -28,6 +28,7 @@ const draw_warning_window = (msg) => {
 const draw_confirm_window = (msg, ok_fn) => {
     const win = document.querySelector("#confirm-window");
     win.style.top = "65px";
+    win.children[1].textContent = msg;
 };
 
 /* functions */
