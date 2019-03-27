@@ -278,6 +278,9 @@ main {
     transition: 0.5s;
     z-index: 999;
 }
+    #warning-window p, #confirm-window p {
+        padding: 1em 0;
+    }
 #menu {
     width: 250px;
     padding: 1em;
