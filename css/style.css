@@ -265,12 +265,12 @@ main {
             border-radius: 3px;
             box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
         }
-#warning-window, #confirm-window {
+.alt-alert {
     width: 400px;
     margin: auto;
     padding: 1em;
     position: fixed;
-    top: -120px;
+    top: -150px;
     right: 0;
     left: 0;
     background: rgba(255, 255, 255, 0.8);
@@ -278,11 +278,16 @@ main {
     transition: 0.5s;
     z-index: 999;
 }
-    #warning-window h2, #confirm-window h2 {
+    .alt-alert h2 {
         border-bottom: 1px solid #ccc;
     }
-    #warning-window p, #confirm-window p {
+    .alt-alert p {
         padding: 1em 0;
+    }
+    .alt-alert button {
+        display: block;
+        width: 100px;
+        text-align: center;
     }
 #menu {
     width: 250px;
