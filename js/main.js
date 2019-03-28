@@ -500,14 +500,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btn_warn_ok = document.querySelector("#btn-warn-ok");
     const fn_btn_warn_ok = () => {
         const win = document.querySelector("#warning-window");
-        win.style.top = "-120px";
+        win.style.top = "-150px";
     };
     btn_warn_ok.addEventListener("click", fn_btn_warn_ok, false);
 
     const btn_conf_ok = document.querySelector("#btn-conf-ok");
     const fn_btn_conf_ok = () => {
         const win = document.querySelector("#confirm-window");
-        win.style.top = "-120px";
+        win.style.top = "-150px";
     };
     btn_conf_ok.addEventListener("click", fn_btn_conf_ok, false);
 });
