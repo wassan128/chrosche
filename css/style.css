@@ -278,6 +278,9 @@ main {
     transition: 0.5s;
     z-index: 999;
 }
+    #warning-window h2, #confirm-window h2 {
+        border-bottom: 1px solid #ccc;
+    }
     #warning-window p, #confirm-window p {
         padding: 1em 0;
     }
