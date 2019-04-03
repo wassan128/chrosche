@@ -510,5 +510,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         win.style.top = "-150px";
     };
     btn_conf_ok.addEventListener("click", fn_btn_conf_ok, false);
+
+    const btn_conf_ng = document.querySelector("#btn-conf-ng");
+    const fn_btn_conf_ng = () => {
+        const win = document.querySelector("#confirm-window");
+        win.style.top = "-150px";
+    };
+    btn_conf_ng.addEventListener("click", fn_btn_conf_ng, false);
 });
 
