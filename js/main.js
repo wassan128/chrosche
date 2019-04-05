@@ -21,6 +21,7 @@ const sanitize = (text) => text.replace("<", "&lt;")
     .replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 const draw_warning_window = (msg) => {
+    document.querySelector("#alt-alert-bg").style.display = "block";
     const win = document.querySelector("#warning-window");
     win.style.top = "65px";
     win.children[1].textContent = msg;
@@ -499,6 +500,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btn_warn_ok = document.querySelector("#btn-warn-ok");
     const fn_btn_warn_ok = () => {
+        document.querySelector("#alt-alert-bg").style.display = "none";
         const win = document.querySelector("#warning-window");
         win.style.top = "-150px";
     };
@@ -506,6 +508,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btn_conf_ok = document.querySelector("#btn-conf-ok");
     const fn_btn_conf_ok = () => {
+        document.querySelector("#alt-alert-bg").style.display = "none";
         const win = document.querySelector("#confirm-window");
         win.style.top = "-150px";
     };
@@ -513,6 +516,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btn_conf_ng = document.querySelector("#btn-conf-ng");
     const fn_btn_conf_ng = () => {
+        document.querySelector("#alt-alert-bg").style.display = "none";
         const win = document.querySelector("#confirm-window");
         win.style.top = "-150px";
     };
