@@ -21,12 +21,13 @@ const sanitize = (text) => text.replace("<", "&lt;")
     .replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
 const draw_warning_window = (msg) => {
-    document.querySelector("#alt-alert-bg").style.display = "block";
+    document.querySelector("#alt-alert-bg").style.top = "0px";
     const win = document.querySelector("#warning-window");
     win.style.top = "65px";
     win.children[1].textContent = msg;
 };
 const draw_confirm_window = (msg, ok_fn) => {
+    document.querySelector("#alt-alert-bg").style.top = "0px";
     const win = document.querySelector("#confirm-window");
     win.style.top = "65px";
     win.children[1].textContent = msg;
@@ -500,25 +501,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btn_warn_ok = document.querySelector("#btn-warn-ok");
     const fn_btn_warn_ok = () => {
-        document.querySelector("#alt-alert-bg").style.display = "none";
-        const win = document.querySelector("#warning-window");
-        win.style.top = "-150px";
+        document.querySelector("#alt-alert-bg").style.top = "-100%";
+        document.querySelector("#warning-window").style.top = "-150px";
     };
     btn_warn_ok.addEventListener("click", fn_btn_warn_ok, false);
 
     const btn_conf_ok = document.querySelector("#btn-conf-ok");
     const fn_btn_conf_ok = () => {
-        document.querySelector("#alt-alert-bg").style.display = "none";
-        const win = document.querySelector("#confirm-window");
-        win.style.top = "-150px";
+        document.querySelector("#alt-alert-bg").style.top = "-100%";
+        document.querySelector("#confirm-window").style.top = "-150px";
     };
     btn_conf_ok.addEventListener("click", fn_btn_conf_ok, false);
 
     const btn_conf_ng = document.querySelector("#btn-conf-ng");
     const fn_btn_conf_ng = () => {
-        document.querySelector("#alt-alert-bg").style.display = "none";
-        const win = document.querySelector("#confirm-window");
-        win.style.top = "-150px";
+        document.querySelector("#alt-alert-bg").style.top = "-100%";
+        document.querySelector("#confirm-window").style.top = "-150px";
     };
     btn_conf_ng.addEventListener("click", fn_btn_conf_ng, false);
 });
