@@ -298,6 +298,15 @@ main {
             width: 100px;
             text-align: center;
         }
+        #btn-warn-ok {
+            background: #239a3b;
+        }
+        #btn-conf-ok {
+            background: #239a3b;
+        }
+        #btn-conf-ng {
+            background: #cf3d3d;
+        }
 #menu {
     width: 250px;
     padding: 1em;
