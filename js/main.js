@@ -31,6 +31,23 @@ const draw_confirm_window = (msg, ok_fn) => {
     const win = document.querySelector("#confirm-window");
     win.style.top = "65px";
     win.children[1].textContent = msg;
+
+    const btn_conf_ok = document.querySelector("#btn-conf-ok");
+    const fn_btn_conf_ok = () => {
+        ok_fn();
+        document.querySelector("#alt-alert-bg").style.top = "-100%";
+        document.querySelector("#confirm-window").style.top = "-150px";
+        btn_conf_ok.removeEventListener("click", fn_btn_conf_ok);
+    };
+    btn_conf_ok.addEventListener("click", fn_btn_conf_ok, false);
+
+    const btn_conf_ng = document.querySelector("#btn-conf-ng");
+    const fn_btn_conf_ng = () => {
+        document.querySelector("#alt-alert-bg").style.top = "-100%";
+        document.querySelector("#confirm-window").style.top = "-150px";
+        btn_conf_ok.removeEventListener("click", fn_btn_conf_ng);
+    };
+    btn_conf_ng.addEventListener("click", fn_btn_conf_ng, false);
 };
 
 /* functions */
@@ -215,7 +232,9 @@ const onclk_edit = (edit) => {
 const onclk_del = (del) => {
     const fn_del = async (e) => {
         const li = e.target.parentNode.parentNode;
-        draw_confirm_window(`「${li.innerText}」を削除しますか?`, () => {return;});
+        draw_confirm_window(`「${li.innerText}」を削除しますか?`, () => {
+            alert("[wip] deleted");
+        });
         const [year, month] = get_ym();
         const ym = get_key(year, month);
         const d = document.getElementById("cal-date").innerText;
@@ -506,18 +525,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
     btn_warn_ok.addEventListener("click", fn_btn_warn_ok, false);
 
-    const btn_conf_ok = document.querySelector("#btn-conf-ok");
-    const fn_btn_conf_ok = () => {
-        document.querySelector("#alt-alert-bg").style.top = "-100%";
-        document.querySelector("#confirm-window").style.top = "-150px";
-    };
-    btn_conf_ok.addEventListener("click", fn_btn_conf_ok, false);
-
-    const btn_conf_ng = document.querySelector("#btn-conf-ng");
-    const fn_btn_conf_ng = () => {
-        document.querySelector("#alt-alert-bg").style.top = "-100%";
-        document.querySelector("#confirm-window").style.top = "-150px";
-    };
-    btn_conf_ng.addEventListener("click", fn_btn_conf_ng, false);
 });
 
