@@ -498,7 +498,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const btn_bg_del = document.querySelector("#btn-bg-del");
     const fn_btn_bg_del = () => {
-        draw_confirm_window(`背景画像をデフォルトに戻しますか?`, del_bg());
+        draw_confirm_window(`背景画像をデフォルトに戻しますか?`, () => {
+            del_bg();
+        });
     };
     btn_bg_del.addEventListener("click", fn_btn_bg_del, false);
 
