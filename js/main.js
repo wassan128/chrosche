@@ -232,32 +232,31 @@ const onclk_edit = (edit) => {
 const onclk_del = (del) => {
     const fn_del = async (e) => {
         const li = e.target.parentNode.parentNode;
-        draw_confirm_window(`「${li.innerText}」を削除しますか?`, () => {
-            alert("[wip] deleted");
+        draw_confirm_window(`「${li.innerText}」を削除しますか?`, async () => {
+            const [year, month] = get_ym();
+            const ym = get_key(year, month);
+            const d = document.getElementById("cal-date").innerText;
+            const target = get_id(li.id);
+
+            const res = await storage.get_sync_storage(ym);
+            res[ym][d] = res[ym][d].filter((x) => x.id !== target);
+
+            if (res[ym][d].length === 0) {
+                reset_color(d);
+                delete res[ym][d];
+            }
+            if (Object.keys(res[ym]).length === 0) {
+                reset_color_all();
+                delete res[ym];
+                await storage.remove_sync_storage(ym);
+            }
+
+            const err = await storage.set_sync_storage(res);
+            if (!err) {
+                coloring();
+                li.parentNode.removeChild(li);
+            }
         });
-        const [year, month] = get_ym();
-        const ym = get_key(year, month);
-        const d = document.getElementById("cal-date").innerText;
-        const target = get_id(li.id);
-
-        const res = await storage.get_sync_storage(ym);
-        res[ym][d] = res[ym][d].filter((x) => x.id !== target);
-
-        if (res[ym][d].length === 0) {
-            reset_color(d);
-            delete res[ym][d];
-        }
-        if (Object.keys(res[ym]).length === 0) {
-            reset_color_all();
-            delete res[ym];
-            await storage.remove_sync_storage(ym);
-        }
-
-        const err = await storage.set_sync_storage(res);
-        if (!err) {
-            coloring();
-            li.parentNode.removeChild(li);
-        }
     };
     del.addEventListener("click", fn_del, false);
 };
