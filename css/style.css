@@ -295,7 +295,7 @@ main {
         }
         .alt-alert button {
             display: block;
-            width: 100px;
+            width: 50%;
             text-align: center;
         }
         #btn-warn-ok {
