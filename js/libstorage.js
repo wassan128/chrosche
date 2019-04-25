@@ -4,7 +4,6 @@ const is_exceeded = () => {
     if (chrome.runtime.lastError === undefined) {
         return false;
     } else {
-        console.log(chrome.runtime.lastError["message"]);
         return true;
     }
 };
