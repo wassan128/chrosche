@@ -16,11 +16,11 @@ const get_ym = () => {
     return [year, month];
 };
 const get_key = (year, month) => `${year}_${month}`;
-const sanitize = (text) => text.replace("<", "&lt;")
+const sanitize = text => text.replace("<", "&lt;")
     .replace("'", "&quot;")
     .replace(/(#[^\s#]*)/g, "<a href='$1' class='hashtags'>$1</a>");
 const get_id = (id_str) => parseInt(id_str.slice(MEMO_ID_PREFIX.length));
-const draw_warning_window = (msg) => {
+const draw_warning_window = msg => {
     document.querySelector("#alt-alert-bg").style.top = "0px";
     const win = document.querySelector("#warning-window");
     win.style.top = "65px";
@@ -51,7 +51,7 @@ const draw_confirm_window = (msg, ok_fn) => {
 };
 
 /* functions */
-const load_memos = async (d) => {
+const load_memos = async d => {
     const [year, month] = get_ym();
     const ym = get_key(year, month);
     d = String(d).replace(/\s/g, "");
@@ -121,7 +121,7 @@ const color = [
     "rgba(35, 154, 59, 0.9)",
     "rgba(25, 97, 39, 0.9)"
 ];
-const reset_color = (d) => {
+const reset_color = d => {
     const td = document.getElementById(`c${d}`);
     td.style.background = color[0];
 };
@@ -153,7 +153,7 @@ const coloring = async () => {
     }
 };
 
-const onclk_td = (e) => {
+const onclk_td = e => {
     const date = e.target.innerText;
     load_memos(date);
     document.querySelector(".modal").style.display = "block";
@@ -161,8 +161,8 @@ const onclk_td = (e) => {
     document.querySelector("#tb-normal").style.display = "block";
 };
 
-const onclk_done = (done) => {
-    const fn_done = async (e) => {
+const onclk_done = done => {
+    const fn_done = async e => {
         const li = e.target.parentNode.parentNode;
         const [year, month] = get_ym();
         const ym = get_key(year, month);
@@ -188,8 +188,8 @@ const onclk_done = (done) => {
     done.addEventListener("click", fn_done, false);
 };
 
-const onclk_edit = (edit) => {
-    const fn_edit = (e) => {
+const onclk_edit = edit => {
+    const fn_edit = e => {
         const li = e.target.parentNode.parentNode;
         const [year, month] = get_ym();
         const ym = get_key(year, month);
@@ -201,7 +201,7 @@ const onclk_edit = (edit) => {
         input.setAttribute("class", "edit-box");
         li.innerText = "";
         li.appendChild(input);
-        input.addEventListener("keyup", async (e) => {
+        input.addEventListener("keyup", async e => {
             if (e.keyCode === 13) {
                 const after = sanitize(input.value);
                 if (after === "") {
@@ -229,8 +229,8 @@ const onclk_edit = (edit) => {
     edit.addEventListener("click", fn_edit, false);
 };
 
-const onclk_del = (del) => {
-    const fn_del = async (e) => {
+const onclk_del = del => {
+    const fn_del = async e => {
         const li = e.target.parentNode.parentNode;
         draw_confirm_window(`「${li.innerText}」を削除しますか?`, async () => {
             const [year, month] = get_ym();
@@ -239,7 +239,7 @@ const onclk_del = (del) => {
             const target = get_id(li.id);
 
             const res = await storage.get_sync_storage(ym);
-            res[ym][d] = res[ym][d].filter((x) => x.id !== target);
+            res[ym][d] = res[ym][d].filter(x => x.id !== target);
 
             if (res[ym][d].length === 0) {
                 reset_color(d);
@@ -263,7 +263,7 @@ const onclk_del = (del) => {
 
 const onclk_hashtags = () => {
     const btns_hashtag = document.getElementsByClassName("hashtags");
-    const fn_btn_hashtag = async (e) => {
+    const fn_btn_hashtag = async e => {
         const target = e.target.innerText;
         const ptn = new RegExp(`${target}</a>`);
 
@@ -303,7 +303,7 @@ const onclk_hashtags = () => {
     }
 };
 
-const add_acts = (li) => {
+const add_acts = li => {
     const act = document.createElement("span");
     const a_done = document.createElement("i");
     a_done.setAttribute("title", "済/未");
@@ -389,7 +389,7 @@ class Calendar {
 }
 
 const load_bg = () => {
-    chrome.storage.local.get("conf_bg", (res) => {
+    chrome.storage.local.get("conf_bg", res => {
         const bg = (res["conf_bg"]) ? `url(${res["conf_bg"]})` : "url('image/bg.jpg')";
         document.body.style.backgroundImage = bg;
     });
@@ -397,7 +397,7 @@ const load_bg = () => {
 const save_bg = () => {
     const reader = new FileReader();
     const btn_bg = document.querySelector("#btn-bg");
-    const fn_btn_bg = (e) => {
+    const fn_btn_bg = e => {
         const file = e.target.files[0];
         if (file.type.substr(0, 5) === "image") {
             reader.readAsDataURL(file);
