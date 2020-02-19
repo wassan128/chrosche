@@ -409,6 +409,10 @@ const save_bg = () => {
     const fn_reader = () => {
         const img = {"conf_bg": reader.result};
         chrome.storage.local.set(img, () => {
+            if (chrome.runtime.lastError !== undefined) {
+                draw_warning_window("画像サイズが大きすぎます");
+                return false;
+            }
             document.body.style.backgroundImage = `url(${img["conf_bg"]})`;
         });
     };
